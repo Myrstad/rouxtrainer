@@ -1,0 +1,14 @@
+{
+    "O1": {
+        "id": "O1",
+        "wantToLearn": true,
+        "totalSeen": 10,
+        "totalSuccess": 5,
+        "masteryLevel": 3,
+        "learningStatus": "learned",
+        "preferredAlgorithm": "R U R' F' R U R' U' R' F R2 U' R'",
+        "customAlgorithms": [
+            { "name:": "Custom #1", "algorithm": "<algorithm goes here>" }
+        ]
+    }
+}

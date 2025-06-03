@@ -1,0 +1,63 @@
+---
+---
+
+<canvas id="cubeCanvas" ></canvas>
+
+<style>
+    canvas {
+        width: 32rem;
+        height: 600px;
+    }
+</style>
+
+<script>
+    import { Cube } from "../../../lib/cube/Cube";
+    import { Renderer3D } from "../../../lib/cube/Renderer3D";
+import { Sticker } from "../../../lib/cube/Sticker";
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const canvas = document.getElementById("cubeCanvas")
+        if (!canvas || !(canvas instanceof HTMLCanvasElement)) {
+            console.error("Canvas not found");
+            return;
+        }
+
+        const myCube = new Cube(3);
+        myCube.turn("x", "2")
+        console.log(myCube.getStickersFromMove("M"))
+        myCube.paintStickers(myCube.getStickersFromMove("M"), "gray")
+        myCube.paintStickers([myCube.getStickerFromPosition([0,3,2]) ?? new Sticker("", [], "x")], "gray")
+        myCube.paintStickers([myCube.getStickerFromPosition([0,2,3]) ?? new Sticker("", [], "x")], "gray")
+        myCube.paintStickers([myCube.getStickerFromPosition([0,-2,3]) ?? new Sticker("", [], "x")], "gray")
+        myCube.paintStickers([myCube.getStickerFromPosition([0,-3,2]) ?? new Sticker("", [], "x")], "gray")
+        // F U R U’ R’ U R U’ R’ U R U’ R’ F’
+        myCube.turn("F")
+        myCube.turn("U")
+        myCube.turn("R")
+        myCube.turn("U", "'")
+        myCube.turn("R", "'")
+        myCube.turn("U")
+        myCube.turn("R")
+        myCube.turn("U", "'")
+        myCube.turn("R", "'")
+        myCube.turn("U")
+        myCube.turn("R")
+        myCube.turn("U", "'")
+        myCube.turn("R", "'")
+        myCube.turn("F", "'")
+
+        
+        // for (let sticker of myCube.getStickersFromMove("M")) {
+        //     sticker.color = "gray"
+        // }
+        
+        
+        const renderer = new Renderer3D(canvas, myCube);
+
+        renderer.start();
+
+        window.addEventListener('beforeunload', () => {
+            renderer.stop();
+        })
+    })
+</script>
