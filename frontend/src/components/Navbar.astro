@@ -1,0 +1,126 @@
+---
+import { Icon } from "astro-icon/components"
+---
+
+<nav>
+    <a class="logo" href="/">
+        <span class="img"></span><span class="bold">ROUX</span>TRAINER
+    </a>
+    <div class="links">
+        <ul>
+            <li><a href="/guides/">Guides <span><Icon name={"mdi:keyboard-arrow-down"}/></span></a></li>
+            <li><a href="/trainers/">Trainers <span><Icon name={"mdi:keyboard-arrow-down"}/></span></a></li>
+            <li><a href="/about/">About</a></li>
+        </ul>
+    </div>
+    <div class="user">
+        <a class="secondary" href="/login">Login</a>
+        <a class="primary" href="/register">Register</a>
+    </div>
+</nav>
+
+<style>
+    nav {
+        position: fixed;
+        top: 0.5rem;
+        left: 0;
+        right: 0;
+        margin: 0 auto;
+        max-width: 75rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0rem 2rem;
+
+        background-color: #eeeeeeb9;
+        height: 3rem;
+        border-radius: 100px;
+
+        backdrop-filter: blur(0.5rem);
+    }
+
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .logo {
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+    }
+
+    .logo .img {
+        display: inline-block;
+        background-color: #333;
+        width: 30px;
+        height: 30px;
+        margin-right: 4px;
+        border-radius: 4px;
+    }
+
+    .logo .bold {
+        font-weight: 500;
+    }
+
+    .links {
+        padding: 0.5rem 2rem;
+        background-color: white;
+        border-radius: 100px;
+        text-transform: uppercase;
+    }
+
+    .links ul {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        height: min-content;
+        font-size: 14px;
+        line-height: 100%;
+    }
+    
+    .links a {
+        display: flex;
+        align-items: center;
+        gap: 2px;
+    }
+
+    .links span {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 12px;
+        padding: 0 4px;
+        border-radius: 1rem;
+        background-color: var(--neutral-900);
+        color: var(--neutral-100)
+    }
+
+    .user {
+        display: flex;
+        gap: 0.75rem;
+        text-transform: uppercase;
+    }
+
+    .user a {
+        font-size: 1rem;
+        line-height: 100%;
+        padding: 0.5rem 1.25rem;
+        border-radius: 2rem;
+    }
+
+    a.primary {
+        background-color: var(--neutral-900);
+        color: var(--neutral-100);
+    }
+
+    a.secondary {
+        background-color: var(--neutral-100);
+        color: var(--neutral-900);
+        outline: 1px solid var(--neutral-900);
+        outline-offset: -1px;;
+    }
+</style>

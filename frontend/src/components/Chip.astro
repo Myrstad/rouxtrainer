@@ -1,0 +1,36 @@
+---
+interface Props {
+  size: "small" | "regular" | "large";
+}
+
+const { size } = Astro.props;
+
+---
+
+<div class="chip" class:list={[size]}>
+    <slot>I'm a chip!</slot>
+</div>
+
+<style is:inline>
+    .small {
+        font-size: calc(1rem / 16 * 14);
+    }
+
+    .regular {
+        font-size: 1rem;
+    }
+
+    .large {
+        font-size: calc(1rem / 16 * 18);
+    }
+
+    .chip {
+        font-family: var(--font);
+        line-height: 100%;
+        width: fit-content;
+        height: fit-content;
+        padding: .25em .4em;
+        border-radius: .25em;
+        background-color: red;
+    }
+</style>
