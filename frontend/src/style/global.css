@@ -1,0 +1,68 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+:root {
+    /* Neutral Colors */
+    --neutral-0: #FFFFFF;
+    --neutral-100: #EEEEEE;
+    --neutral-200: #DDDDDD;
+    --neutral-800: #555555;
+    --neutral-900: #333333;
+    --neutral-1000: #000000;
+
+    /* Rubiks colors */
+    --rubiks-red: #FF0000;
+    --rubiks-orange: #FF7F00;
+    --rubiks-yellow: #FFFF00;
+    --rubiks-green: #00FF00;
+    --rubiks-blue: #0000FF;
+    --rubiks-white: #FFFFFF;
+
+    /* Red colors */
+    --red-200: #FFE9E9;
+    --red-500: #FF7C7C;
+    --red-800: #591414;
+
+    /* Yellow colors */
+    --yellow-200: #FFFCE9;
+    --yellow-300: #FFF07C;
+    --yellow-500: #EED200;
+    --yellow-800: #595114;
+
+    /* Green colors */
+    --green-200: #E9FFF1;
+    --green-300: #7CFFAE;
+    --green-500: #20EA6D;
+    --green-800: #14592F;
+
+    /* Blue colors */
+    --blue-200: #E9F1FF;
+    --blue-500: #7CAAFF;
+    --blue-800: #142C59;
+
+    /* Fonts */
+    --font: "Inter", sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.stop-scrolling {
+  height: 100%;
+  overflow: hidden;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font);
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
