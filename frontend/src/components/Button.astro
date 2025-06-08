@@ -1,0 +1,78 @@
+---
+import { Icon } from 'astro-icon/components';
+
+interface Props {
+  size?: "regular" | "large" | "xlarge";
+  href?: string;
+  icon?: {
+    src: string;
+    side: "left" | "right";
+  };
+  rounded?: boolean;
+  styled?: "filled"| "outlined" | "anonymous"
+}
+
+const { size, href, icon, rounded, styled } = Astro.props
+---
+
+{href ? (
+  <a href={href} class:list={["btn", size, styled, rounded && "rounded"]}>
+    {icon?.side == "left" && (
+        <Icon name={icon.src} />
+    )}
+    <slot />
+    {icon?.side == "right" && (
+        <Icon name={icon.src} />
+    )}
+  </a>
+) : (
+  <div class:list={["btn", size, styled, rounded && "rounded"]}>
+    {icon?.side == "left" && (
+        <Icon name={icon.src} />
+    )}
+    <slot />
+    {icon?.side == "right" && (
+        <Icon name={icon.src} />
+    )}
+  </div>
+)}
+
+<style>
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .btn {
+        display: flex;
+        gap: 0.125em;
+        width: fit-content;
+        height: fit-content;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        line-height: 100%;
+        padding: 0.5rem 1.25rem;
+        color: var(--neutral-900);
+    }
+
+    .btn.rounded {
+        border-radius: 3rem;
+    }
+    .btn.outlined {
+        outline: 1px solid var(--neutral-900);
+        outline-offset: -1px;
+    }
+    .btn.filled {
+        background-color: var(--neutral-900);
+        color: var(--neutral-100);
+    }
+    .btn.large {
+        font-size: 1.25rem;
+        padding: 10px 30px;
+    }
+    .btn.xlarge {
+        font-size: 1.5rem;
+        padding: 0.75rem 2rem;
+    }
+</style>
+

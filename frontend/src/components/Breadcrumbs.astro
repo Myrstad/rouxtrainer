@@ -1,0 +1,61 @@
+---
+import { Icon } from "astro-icon/components";
+
+const route = Astro.url.pathname.split("/").filter(s=>s!=='')
+---
+
+<div class="crumbs" class:list={[route.length == 0 && "empty"]}>
+    { route.length !== 0 && (
+        <a href="/">Home</a>
+    )}
+    {route.map((crumb, index) => {
+            const path = `/${route.slice(0, index + 1).join("/")}/`;
+            crumb = crumb.charAt(0).toUpperCase() + crumb.slice(1); // Uppercase the first letter of the crumb
+            return (
+                <>
+                    <div class="icon"> <Icon name="mdi:chevron-double-right" /> </div>
+                    <a href={path}>{crumb}</a>
+                </>
+            );
+        })}
+</div>
+
+<style>
+    .crumbs {
+        width: fit-content;
+        border-radius: 3rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+        padding: 0 1rem;
+        background-color: var(--neutral-100);
+        color: var(--neutral-900);
+        font-size: 14px;
+    }
+
+    .crumbs.empty {
+        display: none;
+    }
+
+    a {
+        padding: 3px 0;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .icon {
+        display: flex;
+        height: 10px;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--neutral-900);
+        color: var(--neutral-100);
+        padding: 0 4px;
+        border-radius: 1rem;
+    }
+    svg {
+        width: 11px;
+        height: 11px;
+    }
+</style>
