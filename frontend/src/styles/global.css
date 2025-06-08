@@ -41,28 +41,41 @@
 
     /* Fonts */
     --font: "Inter", sans-serif;
+
+    /* Utilities */
+    --max-inner-width: 71rem;
 }
 
 *,
 *::before,
 *::after {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 .stop-scrolling {
-  height: 100%;
-  overflow: hidden;
+    height: 100%;
+    overflow: hidden;
 }
 
 html {
-  scroll-behavior: smooth;
+    scroll-behavior: smooth;
 }
 
 body {
     font-family: var(--font);
+    letter-spacing: 2%;
+    line-height: 160%;
 }
 
 img {
-  display: block;
-  max-width: 100%;
+    display: block;
+    max-width: 100%;
+}
+
+.container {
+    --padding: 1rem;
+    margin: 0 auto;
+    width: 100%;
+    max-width: calc(var(--max-inner-width) + 2 * var(--padding));
+    padding: 0 var(--padding);
 }
