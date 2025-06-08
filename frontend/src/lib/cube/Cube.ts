@@ -1,3 +1,4 @@
+import mod from "astro/zod";
 import { Sticker } from "./Sticker";
 
 /**
@@ -228,5 +229,134 @@ export class Cube {
                 
                 break;
         }
+    }
+
+    // Helper functions
+
+    // Paints middle slice and top edges gray.
+    // DO THIS AFTER ROTATING TO CORRECT ORIENTATION
+    public paintRoux() : void {
+        this.paintStickers(this.getStickersFromMove("M"), "gray")
+        this.paintStickers([this.getStickerFromPosition([0,3,2]) ?? new Sticker("", [], "x")], "gray")
+        this.paintStickers([this.getStickerFromPosition([0,2,3]) ?? new Sticker("", [], "x")], "gray")
+        this.paintStickers([this.getStickerFromPosition([0,-2,3]) ?? new Sticker("", [], "x")], "gray")
+        this.paintStickers([this.getStickerFromPosition([0,-3,2]) ?? new Sticker("", [], "x")], "gray")
+    }
+
+    // important: only do this after initialization / reset.
+    public rotateToState(top: string, front: string) : void {
+        const topColor = top[0].toLowerCase();
+        const frontColor = front[0].toLowerCase();
+        
+        let currentTopColor = this.getStickerFromPosition([0,0,this.dimention])?.color[0];
+        let currentFrontColor = this.getStickerFromPosition([-this.dimention,0,0])?.color[0];
+        
+        while (currentTopColor != topColor) {
+            // Try X 4 times
+            for (let i = 0; i < 4; i++) {
+                this.turn("x");
+                currentTopColor = this.getStickerFromPosition([0,0,this.dimention])?.color[0];
+                if (currentTopColor == topColor) break;
+            }
+            if (currentTopColor == topColor) break;
+
+            const currentLeftColor = this.getStickerFromPosition([0,this.dimention,0])?.color[0];
+            if (currentLeftColor == topColor) {
+                this.turn("z")
+            } else {
+                this.turn("z", "'")
+            }
+            break;
+        }
+
+        // Try y four times, if not invalid front color!
+        for (let i = 0; i < 4; i++) {
+            if (currentFrontColor == frontColor) {
+                break
+            }
+            this.turn("y");
+            currentFrontColor = this.getStickerFromPosition([-this.dimention,0,0])?.color[0];
+        }
+    }
+
+    public getMovesFromAlgorithm(algorithm: string) : string[][] {
+        // filter out '(' and ')' from string.
+        let filteredString: string = algorithm.replace(/[()]/g, '');
+        const rawMoves: string[] = filteredString.split(" ");
+        const moves: string[][] = [];
+
+        for (let index = 0; index < rawMoves.length; index++) {
+            let baseMove = rawMoves[index];
+            const lastChar: string = baseMove[baseMove.length - 1]
+            let modifier = "";
+
+            if (lastChar === "'" || lastChar === "2") {
+                modifier = lastChar;
+                baseMove = baseMove.slice(0, -1);
+            }
+
+            if (baseMove.search("w") !== -1) {
+                baseMove = baseMove[0].toLowerCase();
+            }
+
+            moves.push([baseMove, modifier])
+        }
+
+        return moves;
+    }
+
+    public reverseMoves(moves: string[][]) : string[][] {
+        const reversedMoves: string[][] = [];
+        for (let index = moves.length - 1; index >= 0; index--) {
+            const move = moves[index];
+            let modifier = "";
+
+            // if no modifier (move[0]) or if modifier is empty "", "'" is reverse
+            if (move.at(1) === undefined || move.at(1) === "")
+                modifier = "'"
+            // if modifier is "'", "" is reverse
+            if (move.at(1) === "'")
+                modifier = ""
+            // if modifier is "2", "2" is reverse
+            if (move.at(1) === "2")
+                modifier = "2"
+
+            reversedMoves.push([move[0], modifier])
+        }
+        return reversedMoves;
+    }
+
+    public applyMoves(moves: string[][]) : void {
+        for (let index = 0; index < moves.length; index++) {
+            const move = moves[index];
+            let modifier: "'"|"2"|"";
+            switch (move.at(1)) {
+                case undefined:
+                case "":
+                    modifier = "";
+                    break;
+                case "'":
+                    modifier = "'";
+                    break
+                case "2":
+                    modifier = "2";
+                    break;
+                default:
+                    modifier = "";
+                    break;
+            }
+            this.turn(move[0], modifier)
+        }
+    }
+
+    public movesToString(moves: string[][]) : string {
+        let string = "";
+        
+        for (let index = 0; index < moves.length; index++) {
+            const move = moves[index];
+            string += move[0] + move[1] + " ";
+        }
+
+        return string;
     }
 }
