@@ -1,13 +1,15 @@
 ---
 interface Props {
   size: "small" | "regular" | "large";
+  fill?: string;
+  color?: string;
 }
 
-const { size } = Astro.props;
+const { size, fill, color } = Astro.props;
 
 ---
 
-<div class="chip" class:list={[size]}>
+<div class="chip" class:list={[size]} style={`${fill && 'background-color:' + fill + ';'}${fill && 'color:' + color + ';'}`}>
     <slot>I'm a chip!</slot>
 </div>
 
@@ -25,12 +27,10 @@ const { size } = Astro.props;
     }
 
     .chip {
-        font-family: var(--font);
         line-height: 100%;
         width: fit-content;
         height: fit-content;
         padding: .25em .4em;
         border-radius: .25em;
-        background-color: red;
     }
 </style>
