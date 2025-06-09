@@ -38,6 +38,19 @@ export class Cube {
         this.stickers.push(...this.createFace([0, 0, -offset], "yellow"));
     }
 
+    public reset() : void {
+        this.stickers = [];
+
+        const offset = (this.dimention) // eg. center peice should be [0,3,0] with vertexes [±1,3,±1]
+
+        this.stickers.push(...this.createFace([ offset, 0, 0], "blue"));
+        this.stickers.push(...this.createFace([-offset, 0, 0], "green"));
+        this.stickers.push(...this.createFace([0,  offset, 0], "orange"));
+        this.stickers.push(...this.createFace([0, -offset, 0], "red"));
+        this.stickers.push(...this.createFace([0, 0,  offset], "white"));
+        this.stickers.push(...this.createFace([0, 0, -offset], "yellow"));
+    }
+
     private createFace(facePosition: number[], color: string) : Sticker[] {
         const stickers: Sticker[] = [];
 
@@ -293,6 +306,11 @@ export class Cube {
             if (lastChar === "'" || lastChar === "2") {
                 modifier = lastChar;
                 baseMove = baseMove.slice(0, -1);
+            }
+
+            if (baseMove.search("2") !== -1) {
+                baseMove = baseMove.slice(0, -1);
+                modifier = "2";
             }
 
             if (baseMove.search("w") !== -1) {
