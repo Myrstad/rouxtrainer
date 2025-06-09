@@ -201,13 +201,13 @@ class CMLLTrainer {
 
         const result: TrainingCase[] = [];
         const addCases = (from: TrainingCase[], max: number) => {
-            const numToAdd = Math.min(from.length, max, count - result.length);
+            const numToAdd = Math.min(from.length, max);
             result.push(...from.slice(0, numToAdd));
         };
 
         addCases(categorized.learning, maxLearningInQueue);
-        addCases(categorized.unknown, count);
-        addCases(categorized.unseen, count);
+        addCases(categorized.unknown, this.allCaseDefinitions.length);
+        addCases(categorized.unseen, this.allCaseDefinitions.length);
         addCases(categorized.mastered, maxMasteredInQueue);
 
         // If still not enough, and we have more learning cases than initially added due to maxLearningInQueue
@@ -219,9 +219,7 @@ class CMLLTrainer {
         return this.shuffleArray(result).slice(0, count);
     }
 
-    private shuffleArray<T>(array: T[]): T[] {
-        console.log(array);
-        
+    private shuffleArray<T>(array: T[]): T[] {        
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [array[i], array[j]] = [array[j], array[i]];

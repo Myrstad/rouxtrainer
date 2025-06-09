@@ -2,16 +2,10 @@ import { Sticker } from "./Sticker";
 import { Cube } from "./Cube";
 import { Quaternion, Vector3 } from "../utils/utils";
 
-interface Vec3 {
-    x:number;
-    y:number;
-    z:number;
-}
-
 export class Renderer3D {
     private canvas: HTMLCanvasElement;
     private ctx: CanvasRenderingContext2D;
-    private cube: Cube
+    public cube: Cube
     private displayStickers: Sticker[] = [] 
 
     
