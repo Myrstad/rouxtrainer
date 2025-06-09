@@ -10,5 +10,14 @@
         "customAlgorithms": [
             { "name:": "Custom #1", "algorithm": "<algorithm goes here>" }
         ]
+    },
+    "settings": {
+        "default-view": "2D",
+        "top-color": "yellow",
+        "front-color": "blue",
+        "algorithms-per-session": 5,
+        "max-learning": 5,
+        "max-mastered": 1,
+        "initial-rotation": [0, 0, 0]
     }
 }
