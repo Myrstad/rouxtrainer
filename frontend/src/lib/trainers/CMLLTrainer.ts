@@ -1,526 +1,233 @@
-const CMLLCases = [
-    {
-        "id": "O1",
-        "group": "O",
-        "name": "Adjacent Swap",
-        "recognitionCues": [
-            "solved top",
-            "headlights"
-        ],
-        "algorithms": [
-            "R U R' F' R U R' U' R' F R2 U' R'",
-            "r U R' F' R U R' U' R' F R2 U' r'",
-            "R U R' U' R' F R2 U' R' U' R U R' F'",
-            "r U R' U' r' F R2 U' R' U' R U R' F'",
-            "(U) r U' L U2 R' U R U2 r' L'"
-        ],
-        "recommended:": [ 0 ]
-    },
-    {
-        "id": "O2",
-        "group": "O",
-        "name": "Diagonal Swap",
-        "recognitionCues": [
-            "solved top",
-            "opposite corners"
-        ],
-        "algorithms": [
-            "F R U' R' U' R U R' F' R U R' U' R' F R F'",
-            "r2 D r' U r D' R2 U' F' U' F",
-            "r' U' r' D' r U' r' D r U r' D' r U r' D r2",
-            "F R U' R' U' R U R' F' r U R' U' r' F R F'",
-            "F R' F R2 U' R' U' R U R' F' R U R' U' F'"
-        ],
-        "recommended:": [ 0 ]
-    },
-    {
-        "id": "H1",
-        "group": "H",
-        "name": "Columns",
-        "recognitionCues": [
-            "columns",
-            "no headlights"
-        ],
-        "algorithms": [
-            "R U2 R' U' R U R' U' R U' R'",
-            "r U2 R' U' R U R' U' R U' r'",
-            "(U) R U R' U R U' R' U R U2' R'",
-            "r U' r' U' r U r' U r U r'"
-        ],
-        "recommended:": [ 0, 2 ]
-    },
-    {
-        "id": "H2",
-        "group": "H",
-        "name": "Rows",
-        "recognitionCues": [
-            "rows",
-            "headlights"
-        ],
-        "algorithms": [
-            "F R U R' U' R U R' U' R U R' U' F'",
-            "R' F R U2' R' F' R U F R U R' U F'"
-        ],
-        "recommended:": [ 0 ]
-    },
-    {
-        "id": "H3",
-        "group": "H",
-        "name": "Column",
-        "recognitionCues": [
-            "column",
-            "headlight",
-            "anti headlight (opposite)"
-        ],
-        "algorithms": [
-            "(U) F R U' R' U R U2 R' U' R U R' U' F'",
-            "(U) R U2' R2' F R F' U2 R' F R F'"
-        ],
-        "recommended:": [ 1 ]
-    },
-    {
-        "id": "H4",
-        "group": "H",
-        "name": "Row",
-        "recognitionCues": [
-            "row",
-            "neither headlight nor anti headlight"
-        ],
-        "algorithms": [
-            "(U') R U R' U R U r' F R' F' r",
-            "(U2) r U' r2' D' r U' r' D r2 U r'",
-            "r U' r' F U2' r2' F r U' r"
-        ]
-        ,
-        "recommended:": [ 1 ]
-    },
-    {
-        "id": "Pi1",
-        "group": "Pi",
-        "name": "Right Bar",
-        "recognitionCues": [],
-        "algorithms": [
-            "R U2' R2' U' R2 U' R2' U2' R",
-            "F R U R' U' R U R' U' F'",
-            "f R U R' U' R U R' U' f'",
-            "(U2) F U R U' R' U R U' R' F'",
-            "(U2) F' L' U' L U L' U' L U F",
-            "r' U r2 U' r2' U' r2 U r'",
-            "r U' r2' U r2 U r2' U' r",
-            "R' U2 r U' r' U2 r U r' U2 R"
-        ],
-        "recommended:": [ 1 ]
-    },
-    {
-        "id": "Pi2",
-        "group": "Pi",
-        "name": "Back Slash",
-        "recognitionCues": [],
-        "algorithms": [
-            "(U) F U R U' R' U R U' R2' F' R U R U' R'",
-            "(U) F R' F' R U2 R U' R' U R U2' R'",
-            "(U) R U2 R' U' R U' R2 U L U' R U L'"
-        ],
-        "recommended:": [ 1 ]
-    },
-    {
-        "id": "Pi3",
-        "group": "Pi",
-        "name": "X Checkerboard",
-        "recognitionCues": [],
-        "algorithms": [
-            "R' F2 D R2 U' R2' D' F2 R",
-            "(U') R' F R U F U' R U R' U' F'"
-        ],
-        "recommended:": [ 1 ]
-    },
-    {
-        "id": "Pi4",
-        "group": "Pi",
-        "name": "Forward Slash",
-        "recognitionCues": [],
-        "algorithms": [
-            "R U R' U' R' F R2 U R' U' R U R' U' F'",
-            "R U2 R' U' R U R' U2' R' F R F'",
-            "(U') R' U2 R U R' U R2 U' L' U R' U' L"
-        ],
-        "recommended:": [ 1 ]
-    },
-    {
-        "id": "Pi5",
-        "group": "Pi",
-        "name": "Columns",
-        "recognitionCues": [],
-        "algorithms": [
-            "(U2) r' F R F' r U' R' U' R U' R'",
-            "(U') r U' r2' D' r U r' D r2 U r'",
-            "(U2) R' U R U' R2' F R2 U R' U' F' R",
-            "R' U L U' R U' L' U' L U' L'"
-        ],
-        "recommended:": [ 1 ]
-    },
-    {
-        "id": "Pi6",
-        "group": "Pi",
-        "name": "Left Bar",
-        "recognitionCues": [],
-        "algorithms": [
-            "(U) R U2 R' U' F' R U2 R' U' R U' R' F R U' R'",
-            "(U') R' U' R' F R F' R U' R' U2 R",
-            "(U2) R' U' R U' R' U F' U F R"
-        ],
-        "recommended:": [ 1 ]
-    },
-    {
-        "id": "U1",
-        "group": "U",
-        "name": "Forward Slash",
-        "recognitionCues": [],
-        "algorithms": [
-            "(U2) R2 D R' U2 R D' R' U2 R'",
-            "r U' r' U' r U' r' U' F' U2' F"
-        ],
-        "recommended:": [ 0 ]
-    },
-    {
-        "id": "U2",
-        "group": "U",
-        "name": "Back Slash",
-        "recognitionCues": [],
-        "algorithms": [
-            "R2' D' R U2 R' D R U2 R",
-            "R' F R U R' F R U F U2' F'"
-        ],
-        "recommended:": [ 0 ]
-    },
-    {
-        "id": "U3",
-        "group": "U",
-        "name": "Front Row",
-        "recognitionCues": [],
-        "algorithms": [
-            "(U) R U2' R2' U' R2 U' R' U R' U' R U R' U R",
-            "R2' F U' F U F2 R2 U' R' F R",
-            "R' U' R U' R' U2' R2 U R' U R U2' R'"
-        ],
-        "recommended:": [ 1 ]
-    },
-    {
-        "id": "U4",
-        "group": "U",
-        "name": "Rows",
-        "recognitionCues": [],
-        "algorithms": [
-            "R' F R U' R' U' R U R' F' R U R' U' R' F R F' R",
-            "(U') F R2 D R' U R D' R2' U' F'"
-        ],
-        "recommended:": [ 1 ]
-    },
-    {
-        "id": "U5",
-        "group": "U",
-        "name": "X Checkerboard",
-        "recognitionCues": [],
-        "algorithms": [
-            "R U R' U' R' F2 R2 U' R' U' R U R' F2",
-            "(U2) r U' r' U r' D' r U' r' D r",
-            "(U2) R' F U' R F R' U R F'",
-            "(U') R' D R U' R U' R' U R' D' R",
-            "r' U r' D' r U r' D r U' r"
-        ]
-        ,
-        "recommended:": [ 1 ]
-    },
-    {
-        "id": "U6",
-        "group": "U",
-        "name": "Back Row",
-        "recognitionCues": [],
-        "algorithms": [
-            "R U' R' U' R U R D R' U R D' R2",
-            "(U') F R U R' U' F'",
-            "(U') f R U R' U' f'",
-            "(U) F U R U' R' F'"
-        ]
-        ,
-        "recommended:": [ 1 ]
-    },
-    {
-        "id": "T1",
-        "group": "T",
-        "name": "Left Bar",
-        "recognitionCues": [],
-        "algorithms": [
-            "(U') r U R' U' r' F R F'",
-            "(U') R U R' U' R' F R F'"
-        ],
-        "recommended:": [ 1 ]
-    },
-    {
-        "id": "T2",
-        "group": "T",
-        "name": "Right Bar",
-        "recognitionCues": [],
-        "algorithms": [
-            "(U) l' U' L U l F' L' F",
-            "(U) L' U' L U L F' L' F",
-            "(U') F R U' R' U R U R' F'"
-        ],
-        "recommended:": [ 1 ]
-    },
-    {
-        "id": "T3",
-        "group": "T",
-        "name": "Rows",
-        "recognitionCues": [],
-        "algorithms": [
-            "(U)' R U R' U R U' R' U R' U' R2 U' R2' U2' R",
-            "F R' F R2 U' R' U' R U R' F2",
-            "R U2' R' U' R U' R2' U2' R U R' U R"
-        ],
-        "recommended:": [ 1 ]
-    },
-    {
-        "id": "T4",
-        "group": "T",
-        "name": "Front Row",
-        "recognitionCues": [],
-        "algorithms": [
-            "R' U r U2' R2' F R F' r",
-            "r' U r U2' R2' F R F' R"
-        ],
-        "recommended:": [ 1 ]
-    },
-    {
-        "id": "T5",
-        "group": "T",
-        "name": "Back Row",
-        "recognitionCues": [],
-        "algorithms": [
-            "(U2) F R U R' U' R U' R' U' R U R' F'",
-            "r' D' r U r' D r U' r U r'",
-            "(U) R' D R U' R U R' U R' D' R",
-            "r U' r D r' U r D' r' U r'"
-        ],
-        "recommended:": [ 1 ]
-    },
-    {
-        "id": "T6",
-        "group": "T",
-        "name": "Column",
-        "recognitionCues": [],
-        "algorithms": [
-            "R' U R2 D r' U2 r D' R2' U' R",
-            "(U2) r2' D' r U r' D r2 U' r' U' r",
-            "(U2) r U' r2' D' r U2 r' D r2 U r'"
-        ],
-        "recommended:": [ 1 ]
-    },
-    {
-        "id": "S1",
-        "group": "S",
-        "name": "Left Bar",
-        "recognitionCues": [],
-        "algorithms": [
-            "(U) R U R' U R U2 R'",
-            "(U) r U R' U R U2 r'"
-        ],
-        "recommended:": [ 0 ]
-    },
-    {
-        "id": "S2",
-        "group": "S",
-        "name": "X Checkerboard",
-        "recognitionCues": [],
-        "algorithms": [
-            "(U) L' U2 L U2' l F' L' F M'",
-            "(U) L' U2 L U2' L F' L' F"
-        ],
-        "recommended:": [ 1 ]
-    },
-    {
-        "id": "S3",
-        "group": "S",
-        "name": "Forward Slash",
-        "recognitionCues": [],
-        "algorithms": [
-            "(U) M F R' F' R U2 R U2' r'",
-            "(U) F R' F' R U2 R U2' R'"
-        ],
-        "recommended:": [ 1 ]
-    },
-    {
-        "id": "S4",
-        "group": "S",
-        "name": "Columns",
-        "recognitionCues": [],
-        "algorithms": [
-            "(U) R U R' U' R' F R F' R U R' U R U2' R'",
-            "R U R' U R U' R D R' U' R D' R2'"
-        ],
-        "recommended:": [ 0 ]
-    },
-    {
-        "id": "S5",
-        "group": "S",
-        "name": "Right Bar",
-        "recognitionCues": [],
-        "algorithms": [
-            "(U') R U R' U L' U R U' L U2 R'",
-            "(U') R U R' U R' F R F' R U2' R'"
-        ],
-        "recommended:": [ 1 ]
-    },
-    {
-        "id": "S6",
-        "group": "S",
-        "name": "Back Slash",
-        "recognitionCues": [],
-        "algorithms": [
-            "(U) R U' L' U R' U' L",
-            "(U) r U' r' F R' F' R",
-            "(U') L U' R' U L' U' R"
-        ],
-        "recommended:": [ 0 ]
-    },
-    {
-        "id": "AS1",
-        "group": "AS",
-        "name": "Right Bar",
-        "recognitionCues": [],
-        "algorithms": [
-            "(U) R' U' R U' R' U2' R",
-            "(U) r' U' R U' R' U2' r",
-            "(U2) R U2 R' U' R U' R'"
-        ],
-        "recommended:": [ 0 ]
-    },
-    {
-        "id": "AS2",
-        "group": "AS",
-        "name": "Columns",
-        "recognitionCues": [],
-        "algorithms": [
-            "(U') R2 D R' U R D' R' U R' U' R U' R'",
-            "(U') r R D R' U R D' R' U R' U' R U' r'"
-        ],
-        "recommended:": [ 0 ]
-    },
-    {
-        "id": "AS3",
-        "group": "AS",
-        "name": "Back Slash",
-        "recognitionCues": [],
-        "algorithms": [
-            "(U') M F' L F L' U2' L' U2 L M'",
-            "(U') F' L F L' U2' L' U2 L"
-        ],
-        "recommended:": [ 1 ]
-    },
-    {
-        "id": "AS4",
-        "group": "AS",
-        "name": "X Checkerboard",
-        "recognitionCues": [],
-        "algorithms": [
-            "(U') R U2' R' U2 r' F R F' M'",
-            "(U') R U2' R' U2 R' F R F'"
-        ],
-        "recommended:": [ 1 ]
-    },
-    {
-        "id": "AS5",
-        "group": "AS",
-        "name": "Forward Slash",
-        "recognitionCues": [],
-        "algorithms": [
-            "(U') L' U R U' L U R'",
-            "(U') R' F R F' r U r'   ",
-            "(U) R' U L U' R U L'"
-        ],
-        "recommended:": [ 0 ]
-    },
-    {
-        "id": "AS6",
-        "group": "AS",
-        "name": "Left Bar",
-        "recognitionCues": [],
-        "algorithms": [
-            "(U') R' U' R U' L U' R' U L' U2 R",
-            "R' U' R U' R' U R' F R F' U R"
-        ],
-        "recommended:": [ 1 ]
-    },
-    {
-        "id": "L1",
-        "group": "L",
-        "name": "Mirror",
-        "recognitionCues": [],
-        "algorithms": [
-            "R2' D' R U' R' D R U R",
-            "(U2) F R U' R' U' R U R' F'",
-            "(U') F' r U r' U' r' F r",
-            "(U') F' r U R' U' r' F R"
-        ],
-        "recommended:": [ 1 ]
-    },
-    {
-        "id": "L2",
-        "group": "L",
-        "name": "Inverse",
-        "recognitionCues": [],
-        "algorithms": [
-            "(U2) F R' F' r U R U' r'",
-            "(U2) F R' F' R U R U' R'"
-        ],
-        "recommended:": [ 1 ]
-    },
-    {
-        "id": "L3",
-        "group": "L",
-        "name": "Pure",
-        "recognitionCues": [],
-        "algorithms": [
-            "R U2 R' U' R U R' U' R U R' U' R U' R'",
-            "R U R' U' R' F R F' R' F R F' r U r' ",
-            "R U R' U R U' R' U R U' R' U R U2 R'"
-        ],
-        "recommended:": [ 0 ]
-    },
-    {
-        "id": "L4",
-        "group": "L",
-        "name": "Front Commutator",
-        "recognitionCues": [],
-        "algorithms": [
-            "(U2) R U2 R D R' U2 R D' R2' ",
-            "R U R' U R' F R F' U2 R' F R F'",
-            "(U2) R U R' U' F' U2' F U R U R'"
-        ],
-        "recommended:": [ 0 ]
-    },
-    {
-        "id": "L5",
-        "group": "L",
-        "name": "Diagonal",
-        "recognitionCues": [],
-        "algorithms": [
-            "R' U' R U R' F' R U R' U' R' F R2",
-            "(U2) R U2' R2' F R F' R U2' R'",
-            "(U2) r U2' R2' F R F' R U2' r'"
-        ],
-        "recommended:": [ 0, 1 ]
-    },
-    {
-        "id": "L6",
-        "group": "L",
-        "name": "Back Commutator",
-        "recognitionCues": [],
-        "algorithms": [
-            "(U) R' U2 R' D' R U2 R' D R2",
-            "(U2) R U R' U' R' F R2 U' R' U R U R' F'"
-        ],
-        "recommended:": [ 0 ]
-    }
-]
+import type { CMLLCaseDefinition, TrainingCase, TrainingData, LearningStatus } from './CMLLTypes'
+import CMLLCases from "./CMLL-cases.json"
+import { LOCAL_STORAGE_KEY, CMLL_CASES_JSON_PATH } from "./CMLLTypes";
 
+class CMLLTrainer {
+
+    private allCaseDefinitions: CMLLCaseDefinition[] = [];
+    public trainingData: TrainingData = {};
+    private isInitialized = false;
+
+    public constructor() {
+    }
+
+    public async initialize() : Promise<void> {
+        if (this.isInitialized) {
+            console.warn("CMLLTrainer already initialized.");
+            return;
+        }
+
+        try {
+            // const response = await fetch(CMLL_CASES_JSON_PATH);
+            // if (!response.ok) {
+            //     throw new Error(`Failed to fetch CMLL cases from ${CMLL_CASES_JSON_PATH}: ${response.statusText}`);
+            // }
+            // this.allCaseDefinitions = await response.json();
+            this.allCaseDefinitions = CMLLCases;
+            this._loadTrainingFromLocalStorage();
+            this._ensureTrainingDataForAllCases();
+            this.isInitialized = true;
+            console.log("CMLLTrainer initialized with", this.allCaseDefinitions.length, "cases.");
+        } catch (error) {
+            console.error("Error initializing CMLLTrainer:", error);
+            throw error; // Re-throw to allow UI to handle it
+        }
+            
+    }
+    
+    private _ensureTrainingDataForAllCases(): void {
+        if (!this.allCaseDefinitions || this.allCaseDefinitions.length === 0) return;
+
+        let trainingDataUpdated = false;
+        this.allCaseDefinitions.forEach(caseDef => {
+            if (!this.trainingData[caseDef.id]) {                
+                this.trainingData[caseDef.id] = this._createCaseShell(caseDef.id);
+                trainingDataUpdated = true;
+            }
+        });
+
+        if (trainingDataUpdated) {
+            this._saveTrainingToLocalStorage();
+        }
+    }
+
+    private _loadTrainingFromLocalStorage(): void {
+        // Compiler / astro shell fix TODO: actual fix
+        if (!localStorage) return;
+        const storedDataString = localStorage.getItem(LOCAL_STORAGE_KEY);
+        if (storedDataString === null) {
+            this.trainingData = {};
+            return;
+        }
+        try {
+            const parsedData = JSON.parse(storedDataString);
+            // Basic validation could be added here if needed
+            this.trainingData = parsedData;
+        } catch (e) {
+            console.error(`Invalid JSON in localStorage for ${LOCAL_STORAGE_KEY}:`, e);
+            this.trainingData = {}; // Reset to empty if parsing fails
+        }
+    }
+
+    private _saveTrainingToLocalStorage(): void {
+        try {
+            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(this.trainingData));
+        } catch (e) {
+            console.error(`Error saving training data to localStorage for ${LOCAL_STORAGE_KEY}:`, e);
+            // Potentially handle quota exceeded errors
+        }
+    }
+
+    public resetAllTrainingData(): void {
+        // This confirmation should ideally be handled by the UI calling this method.
+        // if (confirm("Are you sure you want to reset ALL training data?")) {
+        this.trainingData = {};
+        this._ensureTrainingDataForAllCases(); // Re-populates with shells
+        this._saveTrainingToLocalStorage();
+        console.log("All CMLL training data has been reset.");
+    }
+
+    private _createCaseShell(id: string): TrainingCase {
+        const caseDefinition = this.allCaseDefinitions.find(def => def.id === id)
+        
+        let defaultAlgorithm = caseDefinition?.algorithms.at(caseDefinition?.recommended?.at(0) ?? 0) ?? "Alg not found";
+        return {
+            id: id,
+            wantToLearn: false,
+            totalSeen: 0,
+            totalSuccess: 0,
+            masteryLevel: 0,
+            learningStatus: "unseen",
+            preferredAlgorithm: defaultAlgorithm,
+            lastSeen: undefined,
+        };
+    }
+
+    public getCaseDefinition(id: string): CMLLCaseDefinition | undefined {
+        if (!this.isInitialized) {
+            console.warn("Trainer not initialized. Call initialize() first.");
+            return undefined;
+        }
+        return this.allCaseDefinitions.find(c => c.id === id);
+    }
+
+    public getTrainingCase(id: string): TrainingCase | undefined {
+        return this.trainingData[id];
+    }
+
+    public getAllTrainingCases(): TrainingCase[] {
+        return Object.values(this.trainingData);
+    }
+
+    public getAllCaseDefinitions(): CMLLCaseDefinition[] {
+        return this.allCaseDefinitions;
+    }
+
+    public learnCase(id: string): void {
+        if (!this.trainingData[id]) {
+            console.error(`Case with ID ${id} not found in training data.`);
+            return;
+        }
+
+        this.trainingData[id].wantToLearn = true;
+        this._saveTrainingToLocalStorage();
+    }
+
+    public unlearnCase(id: string): void {
+        if (!this.trainingData[id]) {
+            console.error(`Case with ID ${id} not found in training data.`);
+            return;
+        }
+
+        this.trainingData[id].wantToLearn = false;
+        this._saveTrainingToLocalStorage();
+    }
+
+    public recordAttempt(id: string, outcome: 'success'|'fail'|'unsure') {
+        const trainingCase = this.trainingData[id];
+
+        if (!this.trainingData[id]) {
+            console.error(`Case with ID ${id} not found in training data.`);
+            return;
+        }
+
+        trainingCase.totalSeen += 1;
+        trainingCase.lastSeen = Date.now();
+
+        switch (outcome) {
+            case 'success':
+                trainingCase.totalSuccess += 1
+                if (trainingCase.masteryLevel < 3)
+                    trainingCase.masteryLevel += 1;
+                trainingCase.learningStatus = trainingCase.masteryLevel === 3 ? "mastered" : "learning";
+                break;
+            case 'fail':
+                if (trainingCase.masteryLevel > 0)
+                    trainingCase.masteryLevel -= 1;
+                trainingCase.learningStatus = trainingCase.masteryLevel === 0 ? "unknown" : "learning";
+                break;
+            case 'unsure':
+                if (trainingCase.learningStatus === "unseen")
+                    trainingCase.learningStatus = "unknown";
+                break;
+            default:
+                break;  
+        }
+        this._saveTrainingToLocalStorage();
+
+    }
+
+    public selectNextCasesToPractice(
+        count: number = 5,
+        maxLearningInQueue: number = 3,
+        maxMasteredInQueue: number = 1
+    ) : TrainingCase[] {
+        console.log(this);
+        
+        if (!this.isInitialized) {
+            console.warn("Trainer not initialized. Call initialize() first. Returning empty array.");
+            return [];
+        }
+
+        const learnableCases = Object.values(this.trainingData).filter(c => c.wantToLearn);
+        if (learnableCases.length === 0) return [];
+
+        const categorized: Record<LearningStatus, TrainingCase[]> = {
+            unseen: [], unknown: [], learning: [], mastered: []
+        };
+        learnableCases.forEach(c => categorized[c.learningStatus].push(c));
+
+        // May want to sort the cases by last time seen
+
+        const result: TrainingCase[] = [];
+        const addCases = (from: TrainingCase[], max: number) => {
+            const numToAdd = Math.min(from.length, max, count - result.length);
+            result.push(...from.slice(0, numToAdd));
+        };
+
+        addCases(categorized.learning, maxLearningInQueue);
+        addCases(categorized.unknown, count);
+        addCases(categorized.unseen, count);
+        addCases(categorized.mastered, maxMasteredInQueue);
+
+        // If still not enough, and we have more learning cases than initially added due to maxLearningInQueue
+        if (result.length < count && categorized.learning.length > maxLearningInQueue) {
+            const remainingLearning = categorized.learning.slice(maxLearningInQueue);
+            addCases(remainingLearning, count);
+        }
+
+        return this.shuffleArray(result).slice(0, count);
+    }
+
+    private shuffleArray<T>(array: T[]): T[] {
+        console.log(array);
+        
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+}
+
+export default CMLLTrainer;
