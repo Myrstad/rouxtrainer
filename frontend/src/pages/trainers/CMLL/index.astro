@@ -7,15 +7,6 @@ import CMLLApp from "../../../components/CMLL/App.svelte"
 ---
 <Layout>
     <CMLLApp client:load />
-    <div class="flex" style="display: flex; gap: 8px;">
-        <Button rounded styled="filled" size="xlarge" icon={{side: "right", src: "mdi:arrow-right"}}>Testing 123</Button>
-        <Button styled="outlined" size="large">Testing 456 -></Button>
-        <Button>Testing 789</Button>
-        <Chip size="small" fill="var(--red-500)">Test</Chip>
-        <Chip size="regular">Test</Chip>
-        <Chip size="large">Test</Chip>
-    </div>
-    <canvas id="cubeCanvas"></canvas>
 </Layout>
 
 <style>
@@ -26,53 +17,5 @@ import CMLLApp from "../../../components/CMLL/App.svelte"
 </style>
 
 <script>
-    import { Cube } from "../../../lib/cube/Cube";
-    import { Renderer3D } from "../../../lib/cube/Renderer3D";
-import { Sticker } from "../../../lib/cube/Sticker";
-
-    document.addEventListener('DOMContentLoaded', () => {
-        const canvas = document.getElementById("cubeCanvas")
-        if (!canvas || !(canvas instanceof HTMLCanvasElement)) {
-            console.error("Canvas not found");
-            return;
-        }
-
-        const myCube = new Cube(3);
-        myCube.turn("x", "2")
-        console.log(myCube.getStickersFromMove("M"))
-        myCube.paintStickers(myCube.getStickersFromMove("M"), "gray")
-        myCube.paintStickers([myCube.getStickerFromPosition([0,3,2]) ?? new Sticker("", [], "x")], "gray")
-        myCube.paintStickers([myCube.getStickerFromPosition([0,2,3]) ?? new Sticker("", [], "x")], "gray")
-        myCube.paintStickers([myCube.getStickerFromPosition([0,-2,3]) ?? new Sticker("", [], "x")], "gray")
-        myCube.paintStickers([myCube.getStickerFromPosition([0,-3,2]) ?? new Sticker("", [], "x")], "gray")
-        // F U R U’ R’ U R U’ R’ U R U’ R’ F’
-        myCube.turn("F")
-        myCube.turn("U")
-        myCube.turn("R")
-        myCube.turn("U", "'")
-        myCube.turn("R", "'")
-        myCube.turn("U")
-        myCube.turn("R")
-        myCube.turn("U", "'")
-        myCube.turn("R", "'")
-        myCube.turn("U")
-        myCube.turn("R")
-        myCube.turn("U", "'")
-        myCube.turn("R", "'")
-        myCube.turn("F", "'")
-
-        
-        // for (let sticker of myCube.getStickersFromMove("M")) {
-        //     sticker.color = "gray"
-        // }
-        
-        
-        const renderer = new Renderer3D(canvas, myCube);
-
-        renderer.start();
-
-        window.addEventListener('beforeunload', () => {
-            renderer.stop();
-        })
-    })
+    
 </script>
