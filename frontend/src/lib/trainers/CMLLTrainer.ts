@@ -182,7 +182,6 @@ class CMLLTrainer {
         maxLearningInQueue: number = 3,
         maxMasteredInQueue: number = 1
     ) : TrainingCase[] {
-        console.log(this);
         
         if (!this.isInitialized) {
             console.warn("Trainer not initialized. Call initialize() first. Returning empty array.");
