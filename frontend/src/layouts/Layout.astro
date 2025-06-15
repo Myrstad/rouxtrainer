@@ -1,8 +1,19 @@
 ---
 import Navbar from "../components/Navbar.astro";
 import Footer from "../components/Footer.astro";
+import SEO from "../components/SEO.astro";
 import "../styles/global.css";
 import Breadcrumbs from "../components/Breadcrumbs.astro";
+import PreviewImage from "../assets/Preview.png"
+
+// Props
+interface Props {
+    title?: string;
+    description?: string;
+    image?: ImageMetadata;
+}
+
+const { title, description = "A Rubik's cube trainer made for ROUX", image = PreviewImage } = Astro.props
 ---
 
 <!doctype html>
@@ -12,7 +23,7 @@ import Breadcrumbs from "../components/Breadcrumbs.astro";
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		<SEO title={title} description={description} image={PreviewImage} />
 	</head>
 	<body>
 		<Navbar></Navbar>
