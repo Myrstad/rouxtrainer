@@ -1,0 +1,24 @@
+---
+interface Props {
+    title?: string;
+    description?: string;
+    image?: ImageMetadata;
+}
+
+const { title, description = "A Rubik's cube trainer made for ROUX", image } = Astro.props
+---
+
+<title>{ title ? title : "ROUXTrainer" }</title>
+<meta name="description" content={ description }>
+
+<!-- Open Graph -->
+<meta property="og:site_name" content="ROUXTrainer" />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={image?.src} />
+
+<!-- Twitter -->
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:domain" content={import.meta.env.SITE} />
