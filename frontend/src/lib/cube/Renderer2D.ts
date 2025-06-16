@@ -71,6 +71,7 @@ export class Renderer2D {
 
     public render() : void {
         this.clear();
+        
         // Render stickers in a 2D grid.
         const stickers = this.cube.getStickersFromMove("U");
         
@@ -78,31 +79,71 @@ export class Renderer2D {
         stickers.sort((a,b) => b.position[0] - a.position[0]) // Top to bottom of top face
         stickers.sort((a,b) => b.position[2] - a.position[2]) // Top to bottom of cube
         
-        stickers.forEach((sticker, index) => {
+        stickers.forEach((sticker, index) => {            
             if (index < 9) {
                 // Top side, is sorted in rows from left to right
-                console.log("face", sticker.position); 
+                const classList: string[] = [".center"];
+                if (sticker.position[0] == 2)
+                    classList.push("top");
+                if (sticker.position[0] == 0)
+                    classList.push("middle")
+                if (sticker.position[0] == -2)
+                    classList.push("bottom")
+                if (sticker.position[1] == 2)
+                    classList.push("left");
+                if (sticker.position[1] == 0)
+                    classList.push("middle")
+                if (sticker.position[1] == -2)
+                    classList.push("right")
+                if (sticker.position[0] == 0 && sticker.position[1] == 0)
+                    classList.push("origin") // Center would be middle.middle otherwise and select wrong sticker!
+                
+                const element = this.entryPoint.querySelector(classList.join(".")) as HTMLElement
+                element.style.fill = sticker.color;
+                
             }
             else if (index < 12) {
                 // Top rows
-                console.log("top", sticker.position); 
-
+                const classList: string[] = [".row.top"];
+                if (sticker.position[1] == 2)
+                    classList.push("left");
+                if (sticker.position[1] == 0)
+                    classList.push("middle")
+                if (sticker.position[1] == -2)
+                    classList.push("right")
+                
+                const element = this.entryPoint.querySelector(classList.join(".")) as HTMLElement
+                element.style.fill = sticker.color;
             }
-            else if (index < 17) {
+            else if (index < 18) {
                 // Columns, ordered in pairs (rows) from left to right
-                console.log("columns", sticker.position); 
+                const classList: string[] = [".column"];
+                if (sticker.position[1] ==3)
+                    classList.push("left")
+                else
+                    classList.push("right")
+                if (sticker.position[0] == 2)
+                    classList.push("top");
+                if (sticker.position[0] == 0)
+                    classList.push("middle")
+                if (sticker.position[0] == -2)
+                    classList.push("bottom")
 
+                const element = this.entryPoint.querySelector(classList.join(".")) as HTMLElement
+                element.style.fill = sticker.color;
             } else {
                 // Bottom rows
-                console.log("bottom", sticker.position); 
-
+                const classList: string[] = [".row.bottom"];
+                if (sticker.position[1] == 2)
+                    classList.push("left");
+                if (sticker.position[1] == 0)
+                    classList.push("middle")
+                if (sticker.position[1] == -2)
+                    classList.push("right")
+                
+                const element = this.entryPoint.querySelector(classList.join(".")) as HTMLElement
+                element.style.fill = sticker.color;
             }
-
         })
-        
     }
-
-
-
-    
 }
