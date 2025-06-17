@@ -1,14 +1,14 @@
 ---
 import { Icon } from "astro-icon/components";
 
-const route = Astro.url.pathname.split("/").filter(s=>s!=='')
+const route = Astro.url.pathname.split("/").filter((s: string) => s !== '')
 ---
 
 <div class="crumbs" class:list={[route.length == 0 && "empty"]}>
     { route.length !== 0 && (
         <a href="/">Home</a>
     )}
-    {route.map((crumb, index) => {
+    {route.map((crumb: string, index: number) => {
             const path = `/${route.slice(0, index + 1).join("/")}/`;
             crumb = crumb.charAt(0).toUpperCase() + crumb.slice(1); // Uppercase the first letter of the crumb
             return (
