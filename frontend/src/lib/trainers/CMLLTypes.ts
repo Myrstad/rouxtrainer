@@ -15,7 +15,7 @@ export interface TrainingCase {
     wantToLearn: boolean;
     totalSeen: number;
     totalSuccess: number;
-    masteryLevel: 0 | 1 | 2 | 3; // 0: Unknown, 1: Learning, 2: Mastered
+    masteryLevel: 0 | 1 | 2 | 3; // 0: Unseen, 1: Unknown, 2: Learning, 3: Mastered
     learningStatus: LearningStatus;
     preferredAlgorithm: string;
     lastSeen?: number; // Timestamp of the last time this case was practiced
