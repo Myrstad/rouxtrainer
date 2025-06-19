@@ -193,7 +193,7 @@ class CMLLTrainer {
 
     public selectNextCasesToPractice(
         count: number = 5,
-        maxLearningInQueue: number = 3,
+        maxNewCasesInQueue: number = 1,
         maxMasteredInQueue: number = 1
     ) : TrainingCase[] {
         
@@ -202,31 +202,36 @@ class CMLLTrainer {
             return [];
         }
 
-        const learnableCases = Object.values(this.trainingData).filter(c => c.wantToLearn);
+        let learnableCases = Object.values(this.trainingData).filter(c => c.wantToLearn);
         if (learnableCases.length === 0) return [];
 
         const categorized: Record<LearningStatus, TrainingCase[]> = {
             unseen: [], unknown: [], learning: [], mastered: []
         };
         learnableCases.forEach(c => categorized[c.learningStatus].push(c));
+        categorized.learning = this.shuffleArray(categorized.learning);
+        categorized.mastered = this.shuffleArray(categorized.mastered);
+        categorized.unknown = this.shuffleArray(categorized.unknown);
+        categorized.unseen = this.shuffleArray(categorized.unseen);
 
         // May want to sort the cases by last time seen
 
         const result: TrainingCase[] = [];
         const addCases = (from: TrainingCase[], max: number) => {
-            const numToAdd = Math.min(from.length, max);
+            const numToAdd = Math.min(from.length, max); // Failsafe
             result.push(...from.slice(0, numToAdd));
         };
 
-        addCases(categorized.learning, maxLearningInQueue);
-        addCases(categorized.unknown, this.allCaseDefinitions.length);
-        addCases(categorized.unseen, this.allCaseDefinitions.length);
-        addCases(categorized.mastered, maxMasteredInQueue);
+        // Give higher changes of already seen cases versus new or mastered
+        addCases(categorized.learning, this.allCaseDefinitions.length); // Always add all learning, want to master these
+        addCases(categorized.unknown, this.allCaseDefinitions.length);  // Always add all unknown , want to master these
+        addCases(categorized.unseen, maxNewCasesInQueue);   // Strict initial limit
+        addCases(categorized.mastered, maxMasteredInQueue); // Strict initial limit
 
-        // If still not enough, and we have more learning cases than initially added due to maxLearningInQueue
-        if (result.length < count && categorized.learning.length > maxLearningInQueue) {
-            const remainingLearning = categorized.learning.slice(maxLearningInQueue);
-            addCases(remainingLearning, count);
+        // If count is not reached. fill array with randoms from learning, mastered, unknown, unseen
+        while (result.length < count) {
+            learnableCases = this.shuffleArray(learnableCases);
+            result.push(learnableCases[0]);
         }
 
         return this.shuffleArray(result).slice(0, count);
