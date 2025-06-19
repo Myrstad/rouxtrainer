@@ -94,9 +94,18 @@ class CMLLTrainerStore {
     getStats() {
         const cases = Object.values(trainingDataState);
         return {
-            totalTracked: cases.length,
+            totalCases: cases.length,
             wantToLearn: cases.filter(c => c.wantToLearn).length,
-            mastered: cases.filter(c => c.wantToLearn && c.learningStatus === 'mastered').length,
+            learningMastered: cases.filter(c => c.wantToLearn && c.learningStatus === 'mastered').length,
+            learningLearning: cases.filter(c => c.wantToLearn && c.learningStatus === 'learning').length,
+            learningUnknown: cases.filter(c => c.wantToLearn && c.learningStatus === 'unknown').length,
+            learningUnseen: cases.filter(c => c.wantToLearn && c.learningStatus === 'unseen').length,
+            mastered: cases.filter(c => c.learningStatus === 'mastered').length,
+            learning: cases.filter(c => c.learningStatus === 'learning').length,
+            unknown: cases.filter(c => c.learningStatus === 'unknown').length,
+            unseen: cases.filter(c => c.learningStatus === 'unseen').length,
+            totalAttemts: cases.reduce((sum, c) => sum + c.totalSeen, 0),
+            totalSuccess: cases.reduce((sum, c) => sum + c.totalSuccess, 0),
         };
     }
 
