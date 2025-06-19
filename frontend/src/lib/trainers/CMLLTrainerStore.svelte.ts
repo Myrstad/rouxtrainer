@@ -64,6 +64,11 @@ class CMLLTrainerStore {
         this.syncStoreWithTrainer();
     }
 
+    setPreferredAlgorithm(id: string, algorithm: string) {
+        trainerInstance?.setPreferredAlgorithm(id, algorithm);
+        this.syncStoreWithTrainer();
+    }
+
     recordAttempt(id: string, outcome: 'success' | 'fail' | 'unsure') {
         trainerInstance?.recordAttempt(id, outcome);
         this.syncStoreWithTrainer();

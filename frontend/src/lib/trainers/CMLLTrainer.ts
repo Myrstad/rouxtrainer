@@ -143,6 +143,20 @@ class CMLLTrainer {
         this._saveTrainingToLocalStorage();
     }
 
+    public setPreferredAlgorithm(caseId: string, algorithm: string): void {
+        if (!this.trainingData[caseId]) {
+            console.error(`Case with caseId ${caseId} not found in training data.`);
+            return;
+        }
+        const caseDef = this.getCaseDefinition(caseId)
+        if (!caseDef) {
+            console.error("Case not found in case definitions")
+            return;
+        }
+        this.trainingData[caseId].preferredAlgorithm = algorithm;
+        this._saveTrainingToLocalStorage();
+    }
+
     public recordAttempt(id: string, outcome: 'success'|'fail'|'unsure') {
         const trainingCase = this.trainingData[id];
 
