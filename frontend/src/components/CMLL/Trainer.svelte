@@ -8,7 +8,7 @@
 
     cmllTrainerStore.initialize();
 
-    let sessionElements = cmllTrainerStore.selectNextCasesToPractice(5,3,1);
+    let sessionElements = cmllTrainerStore.selectNextCasesToPractice(5,1,1);
     let currentCaseIndex = 0;
 
     $: currentCase = sessionElements[currentCaseIndex];
