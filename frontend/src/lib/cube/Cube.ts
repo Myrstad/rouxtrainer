@@ -238,7 +238,7 @@ export class Cube {
                 break;
         
             default:
-                console.log("Invalid move");
+                console.log("Invalid move:", moveType);
                 
                 break;
         }
