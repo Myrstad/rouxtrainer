@@ -1,0 +1,32 @@
+name: Simple Deploy to Roux Trainer's VPS
+on:
+  push:
+    branches:
+      - main
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout code
+            uses: actions/checkout@v4
+
+          - name: Deploy to VPS
+            uses: appleboy/ssh-action@v1
+            with:
+                host: ${{ secrets.SSH_HOST }}
+                username: ${{ secrets.SSH_USERNAME }}
+                key: ${{ secrets.SSH_KEY }}
+                script: |
+                    echo "Deploying to VPS..."
+                    cd /root/rouxtrainer || { echo "Directory /root/rouxtrainer not found. Exiting..."; exit 1; }
+
+                    echo "Pulling latest code from GitHub..."
+                    git pull origin main
+
+                    echo "Rebuilding and restarting Docker Compose services..."
+
+                    docker-compose up --build -d --force-recreate --remove-orphans
+
+                    echo "Deployment finished!"
+
+                    docker-compose ps
