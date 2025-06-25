@@ -25,8 +25,8 @@ jobs:
 
                     echo "Rebuilding and restarting Docker Compose services..."
 
-                    docker-compose up --build --remove-orphans -d
+                    docker compose up --build --remove-orphans --force-recreate -d
 
                     echo "Deployment finished!"
 
-                    docker-compose ps
+                    docker compose ps
