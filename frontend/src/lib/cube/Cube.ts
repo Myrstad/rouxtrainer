@@ -1,4 +1,3 @@
-import mod from "astro/zod";
 import { Sticker } from "./Sticker";
 
 /**
