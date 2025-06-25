@@ -2,6 +2,11 @@ import { Sticker } from "./Sticker";
 import { Cube } from "./Cube";
 import { Quaternion, Vector3 } from "../utils/utils";
 
+/**
+ * Renderer3D is responsible for rendering a 3D cube on a HTML canvas.
+ * 
+ * It handles mouse interactions, and touch interactions to animate the cube's rotation.
+ */
 export class Renderer3D {
     private canvas: HTMLCanvasElement;
     private ctx: CanvasRenderingContext2D;
@@ -28,6 +33,12 @@ export class Renderer3D {
     private CANVAS_HEIGHT: number = 600;
     private STICKER_SCALE: number= 600/3/4;
 
+    /**
+     * Constructor for Renderer3D.
+     * 
+     * @param canvas instance of HTMLCanvasElement to render the cube onto
+     * @param cube instance of Cuve to render
+     */
     public constructor (canvas: HTMLCanvasElement, cube: Cube) {
         if (!canvas) {
             throw new Error("Canvas element not provided!");
@@ -55,6 +66,9 @@ export class Renderer3D {
         this.animate = this.animate.bind(this);
     }
 
+    /**
+     * Handles startup of eventlisteners and animation loop.
+     */
     public start() : void {
         this.canvas.addEventListener('mousedown', this.handleMouseDown);
         this.canvas.addEventListener('mousemove', this.handleMouseMove);
@@ -65,6 +79,9 @@ export class Renderer3D {
         this.animationFrameId = requestAnimationFrame(this.animate)
     }
 
+    /**
+     * Stops the animation loop and removes (stops) event listeners.
+     */
     public stop() : void {
         if (this.animationFrameId !== null) {
             cancelAnimationFrame(this.animationFrameId);
@@ -76,6 +93,11 @@ export class Renderer3D {
         this.canvas.removeEventListener('mouseleave', this.handleMouseLeave);
     }
 
+    /**
+     * Animation loop.
+     * 
+     * Updates the resolution of the canvas to center cube.
+     */
     private animate() : void {
         this.updateResolution();
         //console.log(this.CANVAS_HEIGHT, this.CANVAS_WIDTH, this.canvas.width, this.canvas.height);
@@ -84,6 +106,9 @@ export class Renderer3D {
         this.animationFrameId = requestAnimationFrame(this.animate)
     }
 
+    /**
+     * Private function: that handles drawing logic of the cube.
+     */
     private drawCube() : void {
         this.createFakeStickers(); // reset stickers, should ideally only be called when cube state changes
         
@@ -161,6 +186,10 @@ export class Renderer3D {
         }
     }
 
+    /**
+     * Creates fake stickers based on the cube's current state.
+     * This is used to render the cube without modifying the original cube's stickers.
+     */
     private createFakeStickers() : void {
         this.displayStickers = []
         this.cube.stickers.forEach(s => {
@@ -174,7 +203,11 @@ export class Renderer3D {
         })
     }
 
-    
+    /**
+     * Set resolution of canvas.
+     * @param width 
+     * @param height 
+     */
     public setResolution(width: number, height: number) {
         this.CANVAS_WIDTH = width;
         this.CANVAS_HEIGHT = height;
@@ -182,6 +215,9 @@ export class Renderer3D {
         this.canvas.height = height;
     }
 
+    /**
+     * Actually update the resolution of the canvas.
+     */
     private updateResolution() : void {
         this.CANVAS_HEIGHT = this.canvas.clientHeight;
         this.CANVAS_WIDTH  = this.canvas.clientWidth;

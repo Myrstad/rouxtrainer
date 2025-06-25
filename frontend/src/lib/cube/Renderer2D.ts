@@ -1,10 +1,17 @@
-import { Sticker } from "./Sticker";
 import { Cube } from "./Cube";
 
+/**
+ * Renderer2D is responsible for rendering a 2D representation of cube on a HTML Element.
+ */
 export class Renderer2D {
     private entryPoint: HTMLElement;
     public cube: Cube;
 
+    /**
+     * 
+     * @param entryPoint HTMLElement where the 2D representation of the cube will be rendered.
+     * @param cube Instance of Cube
+     */
     public constructor (entryPoint: HTMLElement, cube: Cube) {
         this.entryPoint = entryPoint;
         this.entryPoint.innerHTML = `
@@ -62,6 +69,10 @@ export class Renderer2D {
         this.cube = cube;
     }
 
+    /**
+     * Clears the rendered cube by resetting all sticker colors to a neutral color.
+     * This is useful to prepare the renderer for a new render cycle.
+     */
     private clear() : void {
         this.entryPoint.querySelectorAll("path").forEach(pathEl => {
             if (pathEl.getAttribute("class"))
@@ -69,6 +80,11 @@ export class Renderer2D {
         })
     }
 
+    /**
+     * Renders the cube in a 2D grid format.
+     * 
+     * Note: is not animated, needs new call when cube state changes.
+     */
     public render() : void {
         this.clear();
         

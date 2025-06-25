@@ -1,6 +1,7 @@
 
 /**
- * Worth noting that the cordinate systems follows the right hand rule
+ * Worth noting that the cordinate systems follows the right hand rule.
+ * Index points forwards, long finger points left, and thumb points up.
  * 
  * Note: fingers represent the POSITIVE direction of said axis:
  * 
@@ -31,12 +32,13 @@ export class Sticker {
     }
 
     /**
+     * Create vertex coordinates around the center point of sticker given a axis.
      * 
      * @param orientation needed for creating vertices around point
      * @returns array of vertices (array of numbers)
      */
     private createVertices(orientation: "x"|"y"|"z") : number[][] {
-        const [x, y, z] = this.position;
+        const [x, y, z] = this.position; //deconstruct
         if (orientation === "x") {
             return [
                 [x   , y - 1, z - 1],
@@ -65,6 +67,14 @@ export class Sticker {
         throw new Error("non valid axis (x, y, or z");
     }
 
+    /**
+     * Applies a matrix rotation around a given axis to a point.
+     * 
+     * @param point 3D point
+     * @param angle in radians
+     * @param axis x,y or z
+     * @returns new point after rotation
+     */
     private rotateAroundAxis(point: number[], angle: number, axis: "x"|"y"|"z") : number[] {
         const [x, y, z] = point;
         if (axis === "x") {
@@ -86,6 +96,12 @@ export class Sticker {
         throw new Error("non valid axis (x, y, or z");
     }
 
+    /**
+     * Rotate sticker (self) around a given axis by a given angle.
+     * 
+     * @param angle angle in radians
+     * @param axis x,y or z
+     */
     public rotate(angle: number, axis: "x"|"y"|"z") : void {
         this.position = this.rotateAroundAxis(this.position, angle, axis);
         this.normal = this.rotateAroundAxis(this.normal, angle, axis);
@@ -94,5 +110,3 @@ export class Sticker {
         })
     }
 }
-
-const s = new Sticker("red", [10,0,0], "x", [1,0,0])
