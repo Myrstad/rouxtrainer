@@ -1,10 +1,11 @@
 ---
 import { Icon } from "astro-icon/components"
+import Chip from "./Chip.astro"
 ---
 
 <nav>
     <a class="logo" href="/">
-        <span class="img"></span><span class="bold">ROUX</span>TRAINER
+        <span class="img"></span><span class="bold">ROUX</span>TRAINER <Chip size="small" fill="var(--red-500, #FF7C7C)">pre-alpha</Chip>
     </a>
     <div class="links">
         <ul>
@@ -122,5 +123,11 @@ import { Icon } from "astro-icon/components"
         color: var(--neutral-900);
         outline: 1px solid var(--neutral-900);
         outline-offset: -1px;;
+    }
+</style>
+
+<style is:inline>
+    nav a .chip {
+        margin-left: 4px;
     }
 </style>
