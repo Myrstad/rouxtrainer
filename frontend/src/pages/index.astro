@@ -1,12 +1,307 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
+import Button from '../components/Button.astro';
+
+import HeroDecor from "../assets/hero-background.svg"
+import HeroImage from "../assets/CMLL-preview-2D.svg"
+import TrainerShowcase from "../assets/showcase.png"
+import { Image } from 'astro:assets';
 
 // Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
 // Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
 ---
 
 <Layout>
-	To be added (TBA).
-	<!-- <Welcome /> -->
+	<section class="hero">
+		<div class="hero-decor">
+			<img src={HeroDecor.src} aria-hidden="true" alt="none" class="img">
+		</div>
+		<div class="hero-container">
+			<div class="text">
+				<h1 class="h1">Roux Trainer</h1>
+				<p class="text-xl">Unlock lightning-fast recognition and execution with a intelligent, learning app. Make mastery enjoyable and efficient!</p>
+				<div class="buttons">
+					<Button size="xlarge" href="/trainers/" styled="filled">Learn -&gt;</Button>
+					<Button size="xlarge" href="/register/" styled="outlined" rounded={true}>Register -&gt;</Button>
+				</div>
+			</div>
+			<div class="img">
+				<img src={HeroImage.src} alt="A 2D representation of a CMLL case for illustative purposes.">
+			</div>
+		</div>
+	</section>
+	<section class="showcase">
+		<div class="img">
+			<img src={TrainerShowcase.src} alt="">
+		</div>
+		<div class="text">
+			<h2 class="h2">Learn ANKI style</h2>
+			<p class="text-lg">ANKI or more general spaced repetition is shown to be one of the most effective ways to learn, and retain information.</p>
+			<p class="text-lg">So combining spaced spaced repetition with cubing makes for a great and fun way of learning boring algorithms!</p>
+			<Button href="/trainers/" styled="filled" size="large">START LEARNING -&gt;</Button>
+		</div>
+	</section>
+	<section class="testimonials">
+		<h2 class="h2">REAL users says</h2>
+		<div class="cards">
+			<div class="card">
+				<svg width="49" height="37" viewBox="0 0 49 37" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.644897 36.7214V27.1312C0.644897 24.2186 1.15993 21.1284 2.18999 17.8606C3.25557 14.5573 4.7829 11.3784 6.77198 8.32369C8.79658 5.23351 11.2297 2.5518 14.0712 0.278564L20.8909 5.81958C18.6532 9.01632 16.6996 12.3551 15.0302 15.836C13.3963 19.2814 12.5794 22.9754 12.5794 26.918V36.7214H0.644897ZM27.9237 36.7214V27.1312C27.9237 24.2186 28.4388 21.1284 29.4688 17.8606C30.5344 14.5573 32.0617 11.3784 34.0508 8.32369C36.0754 5.23351 38.5085 2.5518 41.35 0.278564L48.1697 5.81958C45.932 9.01632 43.9785 12.3551 42.3091 15.836C40.6752 19.2814 39.8582 22.9754 39.8582 26.918V36.7214H27.9237Z" fill="white"/></svg>
+				
+				<div>
+					<div class="stars">
+						<svg width="16" height="15" viewBox="0 0 16 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.64893 5.2793L9.76611 5.56152L10.0708 5.58594L14.3647 5.92969L11.0933 8.73242L10.8608 8.93164L10.9321 9.22852L11.9312 13.4189L8.25537 11.1729L7.99463 11.0137L7.73389 11.1729L4.05713 13.4189L5.05713 9.22852L5.12842 8.93164L4.896 8.73242L1.62354 5.92969L5.91846 5.58594L6.22314 5.56152L6.34033 5.2793L7.99463 1.30176L9.64893 5.2793Z" stroke="black"/></svg>
+						<svg width="16" height="15" viewBox="0 0 16 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.64893 5.2793L9.76611 5.56152L10.0708 5.58594L14.3647 5.92969L11.0933 8.73242L10.8608 8.93164L10.9321 9.22852L11.9312 13.4189L8.25537 11.1729L7.99463 11.0137L7.73389 11.1729L4.05713 13.4189L5.05713 9.22852L5.12842 8.93164L4.896 8.73242L1.62354 5.92969L5.91846 5.58594L6.22314 5.56152L6.34033 5.2793L7.99463 1.30176L9.64893 5.2793Z" stroke="black"/></svg>
+						<svg width="16" height="15" viewBox="0 0 16 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.64893 5.2793L9.76611 5.56152L10.0708 5.58594L14.3647 5.92969L11.0933 8.73242L10.8608 8.93164L10.9321 9.22852L11.9312 13.4189L8.25537 11.1729L7.99463 11.0137L7.73389 11.1729L4.05713 13.4189L5.05713 9.22852L5.12842 8.93164L4.896 8.73242L1.62354 5.92969L5.91846 5.58594L6.22314 5.56152L6.34033 5.2793L7.99463 1.30176L9.64893 5.2793Z" stroke="black"/></svg>
+						<svg width="16" height="15" viewBox="0 0 16 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.64893 5.2793L9.76611 5.56152L10.0708 5.58594L14.3647 5.92969L11.0933 8.73242L10.8608 8.93164L10.9321 9.22852L11.9312 13.4189L8.25537 11.1729L7.99463 11.0137L7.73389 11.1729L4.05713 13.4189L5.05713 9.22852L5.12842 8.93164L4.896 8.73242L1.62354 5.92969L5.91846 5.58594L6.22314 5.56152L6.34033 5.2793L7.99463 1.30176L9.64893 5.2793Z" stroke="black"/></svg>
+						<svg width="16" height="15" viewBox="0 0 16 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.64893 5.2793L9.76611 5.56152L10.0708 5.58594L14.3647 5.92969L11.0933 8.73242L10.8608 8.93164L10.9321 9.22852L11.9312 13.4189L8.25537 11.1729L7.99463 11.0137L7.73389 11.1729L4.05713 13.4189L5.05713 9.22852L5.12842 8.93164L4.896 8.73242L1.62354 5.92969L5.91846 5.58594L6.22314 5.56152L6.34033 5.2793L7.99463 1.30176L9.64893 5.2793Z" stroke="black"/></svg>
+					</div>
+					<p class="text-rg">ROUX is my all times favorite method. My solve times improved from 40 to 30 seconds. Such an amazing app!</p>
+				</div>
+				<div class="persona"><p>Morten Myrstad</p><img src="" alt=""></div>
+			</div>
+			<div class="card">
+				<svg width="49" height="37" viewBox="0 0 49 37" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.644897 36.7214V27.1312C0.644897 24.2186 1.15993 21.1284 2.18999 17.8606C3.25557 14.5573 4.7829 11.3784 6.77198 8.32369C8.79658 5.23351 11.2297 2.5518 14.0712 0.278564L20.8909 5.81958C18.6532 9.01632 16.6996 12.3551 15.0302 15.836C13.3963 19.2814 12.5794 22.9754 12.5794 26.918V36.7214H0.644897ZM27.9237 36.7214V27.1312C27.9237 24.2186 28.4388 21.1284 29.4688 17.8606C30.5344 14.5573 32.0617 11.3784 34.0508 8.32369C36.0754 5.23351 38.5085 2.5518 41.35 0.278564L48.1697 5.81958C45.932 9.01632 43.9785 12.3551 42.3091 15.836C40.6752 19.2814 39.8582 22.9754 39.8582 26.918V36.7214H27.9237Z" fill="white"/></svg>
+				
+				<div>
+					<div class="stars">
+						<svg width="16" height="15" viewBox="0 0 16 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.64893 5.2793L9.76611 5.56152L10.0708 5.58594L14.3647 5.92969L11.0933 8.73242L10.8608 8.93164L10.9321 9.22852L11.9312 13.4189L8.25537 11.1729L7.99463 11.0137L7.73389 11.1729L4.05713 13.4189L5.05713 9.22852L5.12842 8.93164L4.896 8.73242L1.62354 5.92969L5.91846 5.58594L6.22314 5.56152L6.34033 5.2793L7.99463 1.30176L9.64893 5.2793Z" stroke="black"/></svg>
+						<svg width="16" height="15" viewBox="0 0 16 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.64893 5.2793L9.76611 5.56152L10.0708 5.58594L14.3647 5.92969L11.0933 8.73242L10.8608 8.93164L10.9321 9.22852L11.9312 13.4189L8.25537 11.1729L7.99463 11.0137L7.73389 11.1729L4.05713 13.4189L5.05713 9.22852L5.12842 8.93164L4.896 8.73242L1.62354 5.92969L5.91846 5.58594L6.22314 5.56152L6.34033 5.2793L7.99463 1.30176L9.64893 5.2793Z" stroke="black"/></svg>
+						<svg width="16" height="15" viewBox="0 0 16 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.64893 5.2793L9.76611 5.56152L10.0708 5.58594L14.3647 5.92969L11.0933 8.73242L10.8608 8.93164L10.9321 9.22852L11.9312 13.4189L8.25537 11.1729L7.99463 11.0137L7.73389 11.1729L4.05713 13.4189L5.05713 9.22852L5.12842 8.93164L4.896 8.73242L1.62354 5.92969L5.91846 5.58594L6.22314 5.56152L6.34033 5.2793L7.99463 1.30176L9.64893 5.2793Z" stroke="black"/></svg>
+						<svg width="16" height="15" viewBox="0 0 16 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.64893 5.2793L9.76611 5.56152L10.0708 5.58594L14.3647 5.92969L11.0933 8.73242L10.8608 8.93164L10.9321 9.22852L11.9312 13.4189L8.25537 11.1729L7.99463 11.0137L7.73389 11.1729L4.05713 13.4189L5.05713 9.22852L5.12842 8.93164L4.896 8.73242L1.62354 5.92969L5.91846 5.58594L6.22314 5.56152L6.34033 5.2793L7.99463 1.30176L9.64893 5.2793Z" stroke="black"/></svg>
+
+					</div>
+					<p class="text-rg">Simply no review yet</p>
+				</div>
+				<div class="persona"><p>Potensially you?</p><img src="" alt=""></div>
+			</div>
+			<div class="card">
+				<svg width="49" height="37" viewBox="0 0 49 37" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.644897 36.7214V27.1312C0.644897 24.2186 1.15993 21.1284 2.18999 17.8606C3.25557 14.5573 4.7829 11.3784 6.77198 8.32369C8.79658 5.23351 11.2297 2.5518 14.0712 0.278564L20.8909 5.81958C18.6532 9.01632 16.6996 12.3551 15.0302 15.836C13.3963 19.2814 12.5794 22.9754 12.5794 26.918V36.7214H0.644897ZM27.9237 36.7214V27.1312C27.9237 24.2186 28.4388 21.1284 29.4688 17.8606C30.5344 14.5573 32.0617 11.3784 34.0508 8.32369C36.0754 5.23351 38.5085 2.5518 41.35 0.278564L48.1697 5.81958C45.932 9.01632 43.9785 12.3551 42.3091 15.836C40.6752 19.2814 39.8582 22.9754 39.8582 26.918V36.7214H27.9237Z" fill="white"/></svg>
+				
+				<div>
+					<div class="stars">
+						<svg width="16" height="15" viewBox="0 0 16 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.64893 5.2793L9.76611 5.56152L10.0708 5.58594L14.3647 5.92969L11.0933 8.73242L10.8608 8.93164L10.9321 9.22852L11.9312 13.4189L8.25537 11.1729L7.99463 11.0137L7.73389 11.1729L4.05713 13.4189L5.05713 9.22852L5.12842 8.93164L4.896 8.73242L1.62354 5.92969L5.91846 5.58594L6.22314 5.56152L6.34033 5.2793L7.99463 1.30176L9.64893 5.2793Z" stroke="black"/></svg>
+						<svg width="16" height="15" viewBox="0 0 16 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.64893 5.2793L9.76611 5.56152L10.0708 5.58594L14.3647 5.92969L11.0933 8.73242L10.8608 8.93164L10.9321 9.22852L11.9312 13.4189L8.25537 11.1729L7.99463 11.0137L7.73389 11.1729L4.05713 13.4189L5.05713 9.22852L5.12842 8.93164L4.896 8.73242L1.62354 5.92969L5.91846 5.58594L6.22314 5.56152L6.34033 5.2793L7.99463 1.30176L9.64893 5.2793Z" stroke="black"/></svg>
+						<svg width="16" height="15" viewBox="0 0 16 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.64893 5.2793L9.76611 5.56152L10.0708 5.58594L14.3647 5.92969L11.0933 8.73242L10.8608 8.93164L10.9321 9.22852L11.9312 13.4189L8.25537 11.1729L7.99463 11.0137L7.73389 11.1729L4.05713 13.4189L5.05713 9.22852L5.12842 8.93164L4.896 8.73242L1.62354 5.92969L5.91846 5.58594L6.22314 5.56152L6.34033 5.2793L7.99463 1.30176L9.64893 5.2793Z" stroke="black"/></svg>
+						<svg width="16" height="15" viewBox="0 0 16 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.64893 5.2793L9.76611 5.56152L10.0708 5.58594L14.3647 5.92969L11.0933 8.73242L10.8608 8.93164L10.9321 9.22852L11.9312 13.4189L8.25537 11.1729L7.99463 11.0137L7.73389 11.1729L4.05713 13.4189L5.05713 9.22852L5.12842 8.93164L4.896 8.73242L1.62354 5.92969L5.91846 5.58594L6.22314 5.56152L6.34033 5.2793L7.99463 1.30176L9.64893 5.2793Z" stroke="black"/></svg>
+						<svg width="16" height="15" viewBox="0 0 16 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.64893 5.2793L9.76611 5.56152L10.0708 5.58594L14.3647 5.92969L11.0933 8.73242L10.8608 8.93164L10.9321 9.22852L11.9312 13.4189L8.25537 11.1729L7.99463 11.0137L7.73389 11.1729L4.05713 13.4189L5.05713 9.22852L5.12842 8.93164L4.896 8.73242L1.62354 5.92969L5.91846 5.58594L6.22314 5.56152L6.34033 5.2793L7.99463 1.30176L9.64893 5.2793Z" stroke="black"/></svg>
+					</div>
+					<p class="text-rg">Simply no review yet</p>
+				</div>
+				<div class="persona"><p>Potensially you?</p><img src="" alt=""></div>
+			</div>
+		</div>
+	</section>
 </Layout>
+
+<style>
+	body {
+		background-color: var(--neutral-100);
+		overflow-x: hidden;
+	}
+
+	.hero {
+		z-index: 0;
+		position: relative;
+		isolation: isolate;
+		padding-bottom: 6rem;
+	}
+
+	.hero-decor {
+		position: absolute;
+		inset: 0;
+		right: -4rem;
+		left: -10rem;
+		bottom: -8rem;
+		z-index: -1;
+		filter: blur(16rem);
+		pointer-events: none;
+		user-select: none;
+	}
+
+	.hero-container {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 2rem;
+		margin-top: 4rem;
+	}
+
+	.hero-container .text {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		gap: 0.75rem;
+		color: var(--neutral-900);
+	}
+
+	.hero-container .text p {
+		margin: 0;
+	}
+
+	.hero-container .buttons {
+		display: flex;
+		gap: 1rem;
+	}
+
+	.hero-container .img {
+		display: grid;
+		place-items: center;
+		background-color: rgba(255, 255, 255, 0.7);
+		border-radius: 2rem;
+		border: 4px solid var(--neutral-900);
+		padding: 6rem 0;
+		margin: 4rem 0;
+	}
+
+	.showcase::before {
+		z-index: -1;
+		content: '';
+		display: block;
+		position: absolute;
+		inset: 0;
+		left: -50vw;
+		right: -50vw;
+		background-color: var(--neutral-0);
+	}
+
+	.showcase {
+		padding: 6rem 0;
+		isolation: isolate;
+		position: relative;
+		display: grid;
+		grid-template-columns: 4fr 6fr;
+		gap: 2rem;
+		color: var(--neutral-900);
+	}
+
+	.showcase .img {
+		max-width: 23rem;
+	}
+
+	.showcase .text {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		max-width: 34.5rem;
+	}
+
+	.showcase .text h2 {
+		margin-bottom: 1rem;
+	}
+
+	.showcase .text p {
+		margin-top: 0;
+	}
+
+	.testimonials {
+		padding: 6rem 0;
+	}
+
+	.testimonials .cards .card:nth-child(1) {
+		--accent-color: var(--yellow-500);
+	}
+
+	.testimonials .cards .card:nth-child(2) {
+		--accent-color: #B9DAFF;
+	}
+
+	.testimonials .cards .card:nth-child(3) {
+		--accent-color: #FFC4C4;
+	}
+
+	.testimonials h2 {
+		text-align: center;
+		margin-bottom: 4rem;
+	}
+
+	.testimonials .cards {
+		display: grid;
+		grid-template-columns: 1fr 1fr 1fr;
+		gap: 2rem;
+	}
+
+	.testimonials .card {
+		--accent-color: blue;
+		background-color: var(--neutral-200);
+		border-radius: 0.75rem;
+		border-right: 4px solid var(--accent-color);
+		border-bottom: 4px solid var(--accent-color);
+		padding: 0 1.25rem;
+		margin-bottom: 1.5rem;
+		padding-bottom: 1.5rem;
+		color: var(--neutral-900);
+		position: relative;
+
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.testimonials .card > svg {
+		position: absolute;
+		top: 0.75rem;
+		right: 1rem;
+	}
+
+	.testimonials .card > svg + div {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		padding-bottom: 2rem;
+	}
+
+	.testimonials .stars {
+		margin-top: 0.75rem;
+		margin-bottom: 2rem;
+		display: flex;
+		width: fit-content;
+		gap: 0;
+		background-color: var(--neutral-100);
+		padding: 2px 10px;
+		border-radius: 50vmax;
+	}
+
+	.testimonials .stars svg {
+		fill: var(--accent-color);
+	}
+
+	.testimonials .persona {
+		position: absolute;
+		bottom: 0;
+		background-color: var(--neutral-100);
+		height: 3rem;
+		border: 1px solid var(--neutral-900);
+		transform: translateY(50%);
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		border-radius: 0.5rem;
+	}
+
+	.testimonials .persona p {
+		margin: 0;
+		margin-left: 1rem;
+	}
+
+	.testimonials .persona img {
+		all: unset;
+		display: block;
+		width: 3rem;
+		height: 3rem;
+		background-color: var(--accent-color);
+		outline: 1px solid var(--neutral-900);
+		outline-offset: -1px;
+		border-radius: 0.5rem;
+	}
+</style>
+
+<style is:inline>
+	.hero .buttons .btn.xlarge.outlined {
+		outline: 2px solid var(--neutral-900);
+		outline-offset: -2px;
+		background-color: var(--neutral-100);
+	}
+
+	.showcase .text a {
+		margin-top: 2rem;
+	}
+</style>
