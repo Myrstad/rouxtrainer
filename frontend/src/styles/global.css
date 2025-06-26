@@ -79,3 +79,41 @@ img {
     max-width: calc(var(--max-inner-width) + 2 * var(--padding));
     padding: 0 var(--padding);
 }
+
+.h1 {
+    font-size: 5.5rem;
+    line-height: 100%;
+    font-weight: normal;
+    margin: 0;
+}
+
+.h2 {
+    font-size: 4rem;
+    line-height: 110%;
+    font-weight: normal;
+    margin: 0;
+}
+
+.text-xl {
+    font-size: 1.5rem;
+    line-height: 160%;
+    font-weight: normal;
+}
+
+.text-lg {
+    font-size: 1.25rem;
+    line-height: 160%;
+    font-weight: normal;
+}
+
+.text-rg {
+    font-size: 1rem;
+    line-height: 160%;
+    font-weight: normal;
+}
+
+.text-sm {
+    font-size: 0.875rem;
+    line-height: 100%;
+    font-weight: normal;
+}
