@@ -26,13 +26,13 @@ import { Image } from 'astro:assets';
 				</div>
 			</div>
 			<div class="img">
-				<img src={HeroImage.src} alt="A 2D representation of a CMLL case for illustative purposes.">
+				<Image src={HeroImage} alt="A 2D representation of a CMLL case for illustrative purposes." loading="eager" />
 			</div>
 		</div>
 	</section>
 	<section class="showcase">
 		<div class="img">
-			<img src={TrainerShowcase.src} alt="">
+			<Image src={TrainerShowcase} width={368} alt="Showcase of application." loading="lazy" />
 		</div>
 		<div class="text">
 			<h2 class="h2">Learn ANKI style</h2>
