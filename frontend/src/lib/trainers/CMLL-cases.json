@@ -493,7 +493,7 @@
         "name": "Front Commutator",
         "recognitionCues": [],
         "algorithms": [
-            "(U2) R U2 R D R' U2 R D' R2' ",
+            "(U2) R U2 R D R' U2 R D' R2'",
             "R U R' U R' F R F' U2 R' F R F'",
             "(U2) R U R' U' F' U2' F U R U R'"
         ],
