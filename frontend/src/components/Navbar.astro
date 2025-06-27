@@ -1,6 +1,15 @@
 ---
 import { Icon } from "astro-icon/components"
 import Chip from "./Chip.astro"
+
+const dropdowns = {
+    "guides": [
+        { name: "Getting Started", href: "/guides/" },
+    ],
+    "trainers": [
+        { name: "CMLL", href: "/trainers/CMLL/" },
+    ]
+}
 ---
 
 <nav>
@@ -9,9 +18,35 @@ import Chip from "./Chip.astro"
     </a>
     <div class="links">
         <ul>
-            <li><a href="/guides/">Guides <span><Icon name={"mdi:keyboard-arrow-down"}/></span></a></li>
-            <li><a href="/trainers/">Trainers <span><Icon name={"mdi:keyboard-arrow-down"}/></span></a></li>
-            <li><a href="/about/">About</a></li>
+            <li class="has-dropdown">
+                <a href="/guides/" aria-haspopup="true" aria-expanded="false" id="guides-dropdown" >
+                    Guides <span><Icon name={"mdi:keyboard-arrow-down"}/></span>
+                </a>
+                <div class="dropdown-menu" id="guides-dropdown">
+                    <ul>
+                        {dropdowns.guides.map(item=>(
+                            <li><a href={item.href}>{item.name}</a></li>
+                        ))}
+                    </ul>
+                </div>
+            </li>
+            <li class="has-dropdown">
+                <a href="/trainers/" aria-haspopup="true" aria-expanded="false" id="trainers-dropdown">
+                    Trainers <span><Icon name={"mdi:keyboard-arrow-down"}/></span>
+                </a>
+                <div class="dropdown-menu" id="trainers-dropdown">
+                    <ul>
+                        {dropdowns.trainers.map(item=>(
+                            <li><a href={item.href}>{item.name}</a></li>
+                        ))}
+                    </ul>
+                </div>
+            </li>
+            <li>
+                <a href="/about/">
+                    About
+                </a>
+            </li>
         </ul>
     </div>
     <div class="user">
@@ -126,6 +161,51 @@ import Chip from "./Chip.astro"
         outline: 1px solid var(--neutral-900);
         outline-offset: -1px;;
     }
+
+    .has-dropdown {
+        position: relative;
+    }
+
+    .dropdown-menu {
+        position: absolute;
+        top: calc(100% + 0.875rem);
+        left: 50%;
+        min-width: 8rem;
+        transform: translateX(-50%);
+        background-color: rgba(51, 51, 51, 0.8);
+        color: var(--neutral-0);
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        padding: 1rem 3rem;
+        backdrop-filter: blur(0.5rem);
+
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+    }
+
+    .dropdown-menu.is-open {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+    }
+
+    .dropdown-menu ul {
+        flex-direction: column;     
+        gap: 0.25rem;
+    }
+
+    .dropdown-menu li {
+        width: 100%;
+    }
+
+    .dropdown-menu a {
+        width: 100%;
+        font-size: 1rem;
+        padding: 0.125rem 0;
+        display: block;
+        white-space: nowrap;
+    }
 </style>
 
 <style is:inline>
@@ -133,3 +213,89 @@ import Chip from "./Chip.astro"
         margin-left: 4px;
     }
 </style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const dropdownTriggers: NodeListOf<HTMLElement> = document.querySelectorAll(".has-dropdown > a");
+
+        let activeDropdownMenu: HTMLElement | null = null;
+        let hideDropdownTimeoutId: NodeJS.Timeout|null = null;
+
+        function showDropdown(trigger: HTMLElement, menu: HTMLElement) {
+            clearTimeout(hideDropdownTimeoutId ?? 0);
+
+            if (activeDropdownMenu && activeDropdownMenu !== menu) {
+                activeDropdownMenu.classList.remove("is-open");
+                const prevTrigger = document.querySelector(`[aria-controls="${activeDropdownMenu.id}"]`)
+                if (prevTrigger) {
+                    prevTrigger.setAttribute("aria-expanded", "false")
+                }
+            }
+
+            menu.classList.add("is-open");
+            trigger.setAttribute("aria-expanded", "true")
+            activeDropdownMenu = menu;
+        }
+
+        function initiateHideDropdown(trigger: HTMLElement, menu: HTMLElement) {
+            clearTimeout(hideDropdownTimeoutId ?? 0);
+
+            hideDropdownTimeoutId = setTimeout(() => {
+                if (activeDropdownMenu === menu) {
+                    menu.classList.remove("is-open")
+                    trigger.setAttribute('aria-expanded', 'false');
+                    activeDropdownMenu = null
+                }
+            }, 2000);
+        }
+
+        dropdownTriggers.forEach(trigger => {
+            console.log(trigger);
+            
+            const chip = trigger.querySelector("span")
+            const dropdownMenu = trigger.nextElementSibling as HTMLElement;
+
+            if (!dropdownMenu || !dropdownMenu.classList.contains("dropdown-menu")) {
+                console.error("Dropdown menu element not found or incorrect for trigger:", trigger);
+                return;
+            }
+
+            trigger.setAttribute('aria-controls', dropdownMenu.id);
+
+            chip?.addEventListener("click", (e) => {
+                e.preventDefault();
+                showDropdown(trigger, dropdownMenu)
+            })
+
+            trigger.addEventListener("mouseenter", () => {
+                showDropdown(trigger, dropdownMenu)
+            })
+            dropdownMenu.addEventListener("mouseenter", () => {
+                showDropdown(trigger, dropdownMenu)
+            })
+
+            trigger.addEventListener('mouseleave', () => {
+                initiateHideDropdown(trigger, dropdownMenu);
+            });
+            dropdownMenu.addEventListener('mouseleave', () => {
+                initiateHideDropdown(trigger, dropdownMenu);
+            });
+
+            trigger.addEventListener('focus', () => {
+                showDropdown(trigger, dropdownMenu);
+            });
+            
+            const dropdownArea = trigger.closest('.has-dropdown') as HTMLElement;
+            if (dropdownArea) {
+                dropdownArea.addEventListener('focusout', (event) => {
+                    // Check if the new focused element (event.relatedTarget) is outside the dropdown area
+                    const isFocusStillInsideDropdownArea = dropdownArea.contains(event.relatedTarget as Node);
+                    if (!isFocusStillInsideDropdownArea) {
+                        initiateHideDropdown(trigger, dropdownMenu);
+                    }
+                });
+            }
+        })
+    })
+
+</script>
