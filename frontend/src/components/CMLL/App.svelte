@@ -4,7 +4,7 @@
     import { setContext } from 'svelte';
 
 
-    const currentPage = writable("trainer");
+    const currentPage = writable("home");
 
     function navigateTo(pageName: string) {
         currentPage.set(pageName);
