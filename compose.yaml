@@ -11,6 +11,16 @@ services:
         ports:
             - "${DATABASE_PORT}:5432"
 
+    backend:
+        build:
+            context: ./backend
+            dockerfile: Dockerfile
+            target: production
+        restart: unless-stopped
+        ports:
+            - "${BACKEND_PORT}:3000"
+
+
     frontend:
         build:
             context: ./frontend
