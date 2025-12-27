@@ -16,7 +16,7 @@ COPY --from=build /app/frontend/dist /usr/share/nginx/html
 
 FROM node:20-alpine AS dev
 
-WORKDIR /app/frontend
+WORKDIR /frontend
 
 COPY package.json package-lock.json ./
 COPY . .
