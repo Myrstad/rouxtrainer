@@ -18,10 +18,10 @@ export interface TrainingCase {
     masteryLevel: 0 | 1 | 2 | 3; // 0: Unseen, 1: Unknown, 2: Learning, 3: Mastered
     learningStatus: LearningStatus;
     preferredAlgorithm: string;
+    customAlgorithm?: string[];
     lastSeen?: number; // Timestamp of the last time this case was practiced
 }
 
 export type TrainingData = Record<string, TrainingCase>; // Maps case ID to TrainingCase
 
-export const LOCAL_STORAGE_KEY = "CMLL_Training_Data"; // Key to localstorage for data
 export const CMLL_CASES_JSON_PATH = "/CMLL-cases.json"; // Path to your JSON file in the public/static folder

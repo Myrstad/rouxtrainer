@@ -1,80 +1,108 @@
 <script lang="ts">
-    import { onMount, onDestroy } from "svelte";
     import { Cube } from "../../lib/cube/Cube";
     import { Renderer3D } from "../../lib/cube/Renderer3D";
     import { Renderer2D } from "../../lib/cube/Renderer2D";
     import { cmllTrainerStore } from "../../lib/trainers/CMLLTrainerStore.svelte";
 
-    export let navigateTo: (pageName: string) => void;
+    let { navigateTo } = $props<{ navigateTo: (pageName: string) => void }>();
 
-    cmllTrainerStore.initialize();
+    let initialized = $state(false);
+    let sessionElements = $state<any[]>([]);
+    let currentCaseIndex = $state(0);
 
-    let sessionElements = cmllTrainerStore.selectNextCasesToPractice(5,1,1);
-    let currentCaseIndex = 0;
+    let currentCase = $derived(sessionElements[currentCaseIndex]);
 
-    $: currentCase = sessionElements[currentCaseIndex];
-
-    let reversedScrambleDisplay = "";
-    let showSolution = false;
-    let lastOutcome: 'fail' | 'unsure' | null = null;
+    let reversedScrambleDisplay = $state("");
+    let showSolution = $state(false);
+    let lastOutcome = $state<'fail' | 'unsure' | null>(null);
 
     const trainerCube = new Cube(3);
-    let renderer3DInstance: Renderer3D | undefined = undefined;
-    let renderer2DInstance: Renderer2D | undefined = undefined;
-    let canvasElement3D: HTMLCanvasElement;
-    let previewContainerElement2D: HTMLElement;
+    let renderer3DInstance: Renderer3D | undefined;
+    let renderer2DInstance: Renderer2D | undefined;
+    
+    let canvasElement3D = $state<HTMLCanvasElement>();
+    let previewContainerElement2D = $state<HTMLElement>();
 
-    let currentView: '3D' | '2D' = '3D';
+    let currentView = $state<'3D' | '2D'>('3D');
 
-    onMount(() => {
-        if (sessionElements.length === 0) {
-            return;
-        }
+    function startNewSession() {
+        sessionElements = cmllTrainerStore.selectNextCasesToPractice(5,1,1);
+        currentCaseIndex = 0;
+        lastOutcome = null;
+        showSolution = false;
+    }
 
-        // Initialize 3D renderer
-        if (canvasElement3D) {
+    $effect(() => {
+        const init = async () => {
+            await cmllTrainerStore.initialize();
+            startNewSession();
+            initialized = true;
+        };
+        init();
+    });
+
+    $effect(() => {
+        if (canvasElement3D && !renderer3DInstance) {
             renderer3DInstance = new Renderer3D(canvasElement3D, trainerCube);
             trainerCube.rotateToState("y", "b");
             renderer3DInstance.start();
             renderer3DInstance.cube.paintRoux();
-            renderer3DInstance.cube.applyMoves(renderer3DInstance.cube.reverseMoves(renderer3DInstance.cube.getMovesFromAlgorithm(sessionElements[0].preferredAlgorithm)))
+            
+            return () => {            
+                renderer3DInstance?.stop();
+                renderer3DInstance = undefined;
+            }
         }
+    });
 
-        // Initialize 2D renderer
-        if (previewContainerElement2D) {
+    $effect(() => {
+        if (previewContainerElement2D && !renderer2DInstance) {
             renderer2DInstance = new Renderer2D(previewContainerElement2D, trainerCube);
             render2DPreview();
+            return () => {
+                renderer2DInstance = undefined;
+            }
         }
+    });
 
-        return () => {            
+    $effect(() => {
+        if (currentView === '2D') {
             renderer3DInstance?.stop();
+        } else {
+            renderer3DInstance?.start();
         }
-    })
+    });
+
+    $effect(() => {
+        if (initialized && currentCase) {
+            updateCubeDisplayForCurrentCase();
+        }
+    });
 
     function handleSuccess() {
         if (!currentCase) return;
         cmllTrainerStore.recordAttempt(currentCase.id, 'success');
         lastOutcome = null;
-        currentCaseIndex++; // Move to the next case
+        currentCaseIndex++;
     }
 
     function handleUnsure() {
         if (!currentCase) return;
         cmllTrainerStore.recordAttempt(currentCase.id, 'unsure');
         lastOutcome = 'unsure';
-        showSolution = true; // Reveal the solution
+        showSolution = true;
     }
 
     function handleFail() {
         if (!currentCase) return;
         cmllTrainerStore.recordAttempt(currentCase.id, 'fail');
         lastOutcome = 'fail';
-        showSolution = true; // Reveal the solution
+        showSolution = true;
     }
 
     function handleNextAfterReveal() {
         lastOutcome = null;
-        currentCaseIndex++; // Move to the next case
+        currentCaseIndex++;
     }
 
     function updateCubeDisplayForCurrentCase() {
@@ -93,53 +121,33 @@
         trainerCube.applyMoves(reversedMoves);
 
         if (renderer2DInstance) {
-            render2DPreview(); // Ensure 2D view is updated
+            render2DPreview();
         }
     }
 
     function render2DPreview() {
         if (!renderer2DInstance) return;
-        // The trainerCube is already in the correct state from updateCubeDisplayForCurrentCase
         renderer2DInstance.render();
     }
 
     function setView(view: '3D' | '2D') {
         currentView = view;
-
-        if (currentView === '2D') {
-            renderer3DInstance?.stop();
-        } else {
-            renderer3DInstance?.start();
-        }
-    }
-
-
-
-
-    $: {
-        if (typeof window !== 'undefined') { // Ensure this runs only in the browser
-            if (currentCase && renderer3DInstance && renderer2DInstance) {
-                updateCubeDisplayForCurrentCase();
-            }
-            // If currentCase is undefined because currentCaseIndex is out of bounds 
-            // (and sessionElements was not empty), it means the session is finished.
-            // The template handles displaying the "Session finished" message.
-            // If automatic navigation is desired upon session completion, it could be added here.
-        }
     }
 </script>
 <div class="trainer">
     <div class="tab-navigation">
-        <button on:click={()=>navigateTo('home')}>&lt;-- Go back</button> <h1>Trainer</h1>
+        <button onclick={()=>navigateTo('home')}>&lt;-- Go back</button> <h1>Trainer</h1>
     </div>
-    {#if sessionElements.length === 0}
+    {#if !initialized}
+        <p>Loading...</p>
+    {:else if sessionElements.length === 0}
         <p>No cases selected for practice. Please check your settings or try again later.</p>
-        <button on:click={() => navigateTo('settings')}>Go to Settings</button>
+        <button onclick={() => navigateTo('settings')}>Go to Settings</button>
     {:else if currentCase}
         <div class="card">
             <div class="view-toggle">
-                <button on:click={() => setView('3D')} class:active={currentView === '3D'}>3D</button>
-                <button on:click={() => setView('2D')} class:active={currentView === '2D'}>2D</button>
+                <button onclick={() => setView('3D')} class:active={currentView === '3D'}>3D</button>
+                <button onclick={() => setView('2D')} class:active={currentView === '2D'}>2D</button>
             </div>
     
             <div class="cube-display-container">
@@ -166,9 +174,9 @@
                     {reversedScrambleDisplay}
                 </p>
                 <div class="action-buttons">
-                    <button on:click={handleUnsure} class="unsure">Unsure</button>
-                    <button on:click={handleSuccess} class="success">Success</button>
-                    <button on:click={handleFail} class="fail">Fail</button>
+                    <button onclick={handleUnsure} class="unsure">Unsure</button>
+                    <button onclick={handleSuccess} class="success">Success</button>
+                    <button onclick={handleFail} class="fail">Fail</button>
                 </div>
             {:else}
                 <div class="solution-container">
@@ -185,7 +193,7 @@
                     <p class="solution" title="solution">{currentCase.preferredAlgorithm}</p>
                 </div>
                 <div class="action-buttons">
-                    <button class="next" on:click={handleNextAfterReveal}>Okay</button>
+                    <button class="next" onclick={handleNextAfterReveal}>Okay</button>
                 </div>
             {/if}
         </div>
@@ -195,7 +203,10 @@
             {/each}
         </div>
     {:else}
-        <p>Session finnished</p>
+        <div class="session-finished">
+            <p>Session finished</p>
+            <button onclick={startNewSession}>Start Next Session</button>
+        </div>
     {/if}
 </div>
 
@@ -416,4 +427,19 @@
         background-color: var(--neutral-0);
     }
 
+    .session-finished {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .session-finished button {
+        background-color: var(--neutral-900);
+        color: var(--neutral-0);
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        border: none;
+        font-size: 1rem;
+    }
 </style>

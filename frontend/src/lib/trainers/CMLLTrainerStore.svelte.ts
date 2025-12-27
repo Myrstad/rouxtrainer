@@ -49,8 +49,8 @@ class CMLLTrainerStore {
     };
 
     // --- Trainer Methods ---
-    resetAllTrainingData() {
-        trainerInstance?.resetAllTrainingData();
+    async resetAllTrainingData() {
+        await trainerInstance?.resetAllTrainingData();
         this.syncStoreWithTrainer();
     }
 
@@ -75,11 +75,15 @@ class CMLLTrainerStore {
     }
 
     selectNextCasesToPractice(count?: number, maxLearning?: number, maxMastered?: number): TrainingCase[] {
+        if (!isInitializedState) return [];
+        // Register dependency on trainingDataState so this re-runs when data changes
+        const _ = trainingDataState;
         return trainerInstance?.selectNextCasesToPractice(count, maxLearning, maxMastered) || [];
     }
 
     getCaseDefinition(id: string): CMLLCaseDefinition | undefined {
-        return trainerInstance?.getCaseDefinition(id);
+        // Use reactive state directly
+        return allCaseDefinitionsState.find(c => c.id === id);
     }
 
     // This now directly accesses the reactive trainingDataState

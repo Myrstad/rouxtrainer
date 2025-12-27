@@ -1,6 +1,7 @@
 import type { CMLLCaseDefinition, TrainingCase, TrainingData, LearningStatus } from './CMLLTypes'
 import CMLLCases from "./CMLL-cases.json"
-import { LOCAL_STORAGE_KEY, CMLL_CASES_JSON_PATH } from "./CMLLTypes";
+import { CMLL_CASES_JSON_PATH } from "./CMLLTypes";
+import { db } from '../db';
 
 class CMLLTrainer {
 
@@ -24,8 +25,8 @@ class CMLLTrainer {
             // }
             // this.allCaseDefinitions = await response.json();
             this.allCaseDefinitions = CMLLCases;
-            this._loadTrainingFromLocalStorage();
-            this._ensureTrainingDataForAllCases();
+            await this._loadTrainingFromDb();
+            await this._ensureTrainingDataForAllCases();
             this.isInitialized = true;
             console.log("CMLLTrainer initialized with", this.allCaseDefinitions.length, "cases.");
         } catch (error) {
@@ -35,55 +36,40 @@ class CMLLTrainer {
             
     }
     
-    private _ensureTrainingDataForAllCases(): void {
+    private async _ensureTrainingDataForAllCases(): Promise<void> {
         if (!this.allCaseDefinitions || this.allCaseDefinitions.length === 0) return;
 
-        let trainingDataUpdated = false;
+        const newCases: TrainingCase[] = [];
         this.allCaseDefinitions.forEach(caseDef => {
             if (!this.trainingData[caseDef.id]) {                
-                this.trainingData[caseDef.id] = this._createCaseShell(caseDef.id);
-                trainingDataUpdated = true;
+                const shell = this._createCaseShell(caseDef.id);
+                this.trainingData[caseDef.id] = shell;
+                newCases.push(shell);
             }
         });
 
-        if (trainingDataUpdated) {
-            this._saveTrainingToLocalStorage();
+        if (newCases.length > 0) {
+            await db.cmll.bulkAdd(newCases);
         }
     }
 
-    private _loadTrainingFromLocalStorage(): void {
-        // Compiler / astro shell fix TODO: actual fix
-        if (!localStorage) return;
-        const storedDataString = localStorage.getItem(LOCAL_STORAGE_KEY);
-        if (storedDataString === null) {
+    private async _loadTrainingFromDb(): Promise<void> {
+        try {
+            const storedCases = await db.cmll.toArray();
             this.trainingData = {};
-            return;
-        }
-        try {
-            const parsedData = JSON.parse(storedDataString);
-            // Basic validation could be added here if needed
-            this.trainingData = parsedData;
+            storedCases.forEach(c => {
+                this.trainingData[c.id] = c;
+            });
         } catch (e) {
-            console.error(`Invalid JSON in localStorage for ${LOCAL_STORAGE_KEY}:`, e);
-            this.trainingData = {}; // Reset to empty if parsing fails
+            console.error("Error loading training data from DB:", e);
+            this.trainingData = {};
         }
     }
 
-    private _saveTrainingToLocalStorage(): void {
-        try {
-            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(this.trainingData));
-        } catch (e) {
-            console.error(`Error saving training data to localStorage for ${LOCAL_STORAGE_KEY}:`, e);
-            // Potentially handle quota exceeded errors
-        }
-    }
-
-    public resetAllTrainingData(): void {
-        // This confirmation should ideally be handled by the UI calling this method.
-        // if (confirm("Are you sure you want to reset ALL training data?")) {
+    public async resetAllTrainingData(): Promise<void> {
         this.trainingData = {};
-        this._ensureTrainingDataForAllCases(); // Re-populates with shells
-        this._saveTrainingToLocalStorage();
+        await db.cmll.clear();
+        await this._ensureTrainingDataForAllCases(); // Re-populates with shells
         console.log("All CMLL training data has been reset.");
     }
 
@@ -130,7 +116,7 @@ class CMLLTrainer {
         }
 
         this.trainingData[id].wantToLearn = true;
-        this._saveTrainingToLocalStorage();
+        db.cmll.update(id, { wantToLearn: true });
     }
 
     public unlearnCase(id: string): void {
@@ -140,7 +126,7 @@ class CMLLTrainer {
         }
 
         this.trainingData[id].wantToLearn = false;
-        this._saveTrainingToLocalStorage();
+        db.cmll.update(id, { wantToLearn: false });
     }
 
     public setPreferredAlgorithm(caseId: string, algorithm: string): void {
@@ -154,7 +140,7 @@ class CMLLTrainer {
             return;
         }
         this.trainingData[caseId].preferredAlgorithm = algorithm;
-        this._saveTrainingToLocalStorage();
+        db.cmll.update(caseId, { preferredAlgorithm: algorithm });
     }
 
     public recordAttempt(id: string, outcome: 'success'|'fail'|'unsure') {
@@ -187,7 +173,7 @@ class CMLLTrainer {
             default:
                 break;  
         }
-        this._saveTrainingToLocalStorage();
+        db.cmll.put(trainingCase);
 
     }
 
