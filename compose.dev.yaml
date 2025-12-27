@@ -4,11 +4,13 @@ services:
       target: dev
     volumes:
       - ./backend:/backend
+      - /backend/node_modules
   frontend:
     build:
       target: dev
     volumes:
       - ./frontend:/frontend
+      - /frontend/node_modules
 
 volumes:
   db_data:
