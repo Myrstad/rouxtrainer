@@ -117,19 +117,21 @@
                             {@const trainingCase = cmllTrainerStore.getTrainingCase(caseDef.id)}
                             {#if trainingCase}
                                 <div class="case-setting">
-                                    <p class="case-name">{ caseDef.id } - { caseDef.name }
-                                        {#if trainingCase.wantToLearn}
-                                            <span>- Learning</span>
-                                        {:else}
-                                            <span>- Not learning</span>
-                                        {/if}
-                                        <span>- is {trainingCase.learningStatus}</span>
-                                        <br>
+                                    <div class="case-header">
+                                        <p class="text-rg">
+                                            <b>{ caseDef.id }</b> - { caseDef.name }
+                                            <span class="chip text-sm {trainingCase.learningStatus}">{trainingCase.learningStatus}</span>
+                                            {#if trainingCase.wantToLearn}
+                                                <span class="chip text-sm active">learning</span>
+                                            {:else}
+                                                <span class="chip text-sm active">not learning</span>
+                                            {/if}
+                                        </p>
                                         <label class="learn-toggle">
                                             <span>Learn?</span>
                                             <input type="checkbox" checked={ trainingCase.wantToLearn } on:change={()=>handleWantToLearnToggle(caseDef.id)}/>
                                         </label>
-                                    </p>
+                                    </div>
                                     
                                     <div class="body">
                                         <CmllCasePreview trainingCase={trainingCase} />
@@ -212,9 +214,68 @@
 
     }
 
+    .cases-grid .case-setting:nth-child(1) {
+        border-top-left-radius: 1.5rem;
+    }
+    .cases-grid .case-setting:nth-child(2) {
+        border-top-right-radius: 1.5rem;
+    }
+    .cases-grid .case-setting:nth-last-child(2) {
+        border-bottom-left-radius: 1.5rem;
+    }
+    .cases-grid .case-setting:nth-last-child(1) {
+        border-bottom-right-radius: 1.5rem;
+    }
+
     .case-setting .body {
+        padding-top: 1.5rem;
         display: flex;
         gap: 1.5rem;
+    }
+
+    .case-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .case-header p {
+        margin: 0;
+    }
+
+    .case-setting .chip {
+        padding: 2px 10px;
+    }
+    .case-setting .chip.active {
+        background-color: var(--neutral-200);
+        color: var(--neutral-800);
+    }
+
+    .case-setting .chip.mastered {
+        background-color: var(--green-200);
+        color: var(--green-800);
+    }
+    .case-setting .chip.unseen {
+        background-color: var(--blue-200);
+        color: var(--blue-800);
+    }
+    .case-setting .chip.unknown {
+        background-color: var(--red-200);
+        color: var(--red-800);
+    }
+    .case-setting .chip.learning {
+        background-color: var(--yellow-200);
+        color: var(--yellow-800);
+    }
+
+    .learn-toggle {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .learn-toggle input {
+        width: 1.5rem;
+        height: 1.5rem;
     }
 
     :global(.cube-preview) {

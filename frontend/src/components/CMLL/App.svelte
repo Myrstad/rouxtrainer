@@ -43,8 +43,9 @@
         max-width: 71rem;
         margin: 0 auto;
         margin-top: 4rem;
+        margin-bottom: 4rem;
         min-height: 800px;
-        outline: 2px solid #f003;
+        /* outline: 2px solid #f003; */
         outline-offset: -2px;
     }
 
