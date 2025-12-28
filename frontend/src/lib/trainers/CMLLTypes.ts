@@ -2,9 +2,9 @@ export interface CMLLCaseDefinition {
     id: string; // e.g., "O1", "T2", etc.
     group: string; // e.g., "O", "Pi", etc.
     name: string; // Descriptive name of the case
+    recognitionCues: string[]; // e.g., "headlight", "opposites, etc.
     algorithms: string[]; // The standard algorithm for this case
-    recommended?: number[]; // Indexes for recommended algorithms
-    recognitionCues?: string[]; // e.g., "headlight", "opposites, etc.
+    recommended: number[]; // Indexes for recommended algorithms
     // You can add other properties from your CMLL-cases.json here
 }
 

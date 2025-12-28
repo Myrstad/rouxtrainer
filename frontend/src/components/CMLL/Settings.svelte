@@ -137,18 +137,25 @@
                                         <CmllCasePreview trainingCase={trainingCase} />
     
                                         <div class="algorithm-selection">
-                                            {#each caseDef.algorithms as algorithm (algorithm)}
-                                                <label>
-                                                    <input 
-                                                        type="radio"
-                                                        name={`alg-${caseDef.id}`}
-                                                        value={algorithm}
-                                                        checked={trainingCase.preferredAlgorithm === algorithm}
-                                                        on:change={()=>handlePreferredAlgoritmChange(caseDef.id, algorithm)}
-                                                    />
+                                            {#each caseDef.algorithms as algorithm, index (algorithm)}
+                                            <label>
+                                                <input 
+                                                type="radio"
+                                                name={`alg-${caseDef.id}`}
+                                                value={algorithm}
+                                                checked={trainingCase.preferredAlgorithm === algorithm}
+                                                on:change={()=>handlePreferredAlgoritmChange(caseDef.id, algorithm)}
+                                                />
+                                                <span class="radio-button-body text-sm">
+                                                    <span class="icon">
+                                                        {#if caseDef.recommended.includes(index)}
+                                                            <svg width="18" height="17" viewBox="0 0 18 17" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10.4785 5.91504L10.5957 6.19727L10.9004 6.22168L15.8809 6.62012L12.0859 9.87207L11.8545 10.0703L11.9248 10.3672L13.084 15.2275L8.82031 12.623L8.55957 12.4639L8.29883 12.623L4.03418 15.2275L5.19434 10.3672L5.26465 10.0703L5.0332 9.87207L1.2373 6.62012L6.21875 6.22168L6.52344 6.19727L6.64062 5.91504L8.55957 1.30176L10.4785 5.91504Z"/></svg>
+                                                        {/if}
+                                                    </span>
                                                     {algorithm}
-                                                </label>
-                                                <br>
+                                                </span>
+                                            </label>
+                                            <!-- <br> -->
                                             {/each}
                                         </div>
                                     </div>
@@ -229,7 +236,8 @@
 
     .case-setting .body {
         padding-top: 1.5rem;
-        display: flex;
+        display: grid;
+        grid-template-columns: 100px 1fr;
         gap: 1.5rem;
     }
 
@@ -278,8 +286,55 @@
         height: 1.5rem;
     }
 
+    .algorithm-selection {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .algorithm-selection label {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .radio-button-body {
+        background-color: var(--neutral-0);
+        color: var(--neutral-900);
+        padding-left: .5rem;
+        padding-right: 1rem;
+        border-radius: 0.25rem;
+        display: inline-flex;
+        gap: 0.5rem;
+        align-items: center;
+        min-height: 22px;
+    }
+
+    input:checked + .radio-button-body {
+        background-color: var(--neutral-900);
+        color: var(--neutral-100);
+        border-radius: 1rem;
+    }
+
+    .radio-button-body .icon {
+        display: grid;
+        place-items: center;
+        width: 18px;
+        display: inline-block;
+    }
+
+    .radio-button-body .icon svg {
+        fill: var(--neutral-200);
+        stroke: var(--neutral-900);
+    }
+
+    input:checked + .radio-button-body .icon svg {
+        fill: var(--neutral-200);
+        stroke: var(--neutral-0);
+    }
+
     :global(.cube-preview) {
-        flex: 1;
+        flex: 1 0 auto;
         max-width: 100px;
         max-height: 100px;
         padding: 10px;
