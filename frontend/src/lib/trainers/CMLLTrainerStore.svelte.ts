@@ -78,7 +78,7 @@ class CMLLTrainerStore {
         if (!isInitializedState) return [];
         // Register dependency on trainingDataState so this re-runs when data changes
         const _ = trainingDataState;
-        return trainerInstance?.selectNextCasesToPractice(count, maxLearning, maxMastered) || [];
+        return trainerInstance?.selectNextCasesToPractice(count, true, true, 0.2) || [];
     }
 
     getCaseDefinition(id: string): CMLLCaseDefinition | undefined {

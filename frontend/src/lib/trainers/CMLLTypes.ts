@@ -20,6 +20,9 @@ export interface TrainingCase {
     preferredAlgorithm: string;
     customAlgorithm?: string[];
     lastSeen?: number; // Timestamp of the last time this case was practiced
+    nextReview?: number; // Timestamp
+    currentInterval?: number; // Minutes
+    streakSuccess?: number;
 }
 
 export type TrainingData = Record<string, TrainingCase>; // Maps case ID to TrainingCase
