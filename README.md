@@ -2,6 +2,8 @@
 
 A small project for training and learning the speedcubing method ROUX. Started as a way to learn full CMLL, evolved into so much more!
 
+![RouxTrainer preview image](frontend/src/assets/Preview.png)
+
 ### Local development with docker compose
 Preferred method, has hot reloading and good developer experience. 
 

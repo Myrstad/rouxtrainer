@@ -1,26 +1,39 @@
 <script lang="ts">
     import { onDestroy } from "svelte";
-    import type { CMLLCaseDefinition, TrainingCase } from "../../lib/trainers/CMLLTypes";
+    import type { CMLLCaseDefinition, CMLLSettings, TrainingCase } from "../../lib/trainers/CMLLTypes";
     import { cmllTrainerStore } from "../../lib/trainers/CMLLTrainerStore.svelte";
     import CmllCasePreview from "./CMLLCasePreview.svelte";
     import { Cube } from "../../lib/cube/Cube";
     import { Renderer3D } from "../../lib/cube/Renderer3D";
     
-    export let navigateTo: (pageName: string) => void;
+    let { navigateTo } = $props<{ navigateTo: (pageName: string) => void }>();
 
     let isLoading = true;
-    let errorLoading: Error | null = null;
-    let groupedCases: { [key: string]: CMLLCaseDefinition[] } = {};
+    let errorLoading: Error | null = $state(null);
+    let groupedCases: { [key: string]: CMLLCaseDefinition[] } = $state({});
 
-    let canvasElement: HTMLCanvasElement;
+    let cmllSettings: CMLLSettings | null = $state(null);
+
+    let canvasElement: HTMLCanvasElement | null = $state(null);
     let renderer3D: Renderer3D;
     let previewCube: Cube;
 
-    $: if (canvasElement && !renderer3D) {
-        previewCube = new Cube(1);
-        renderer3D = new Renderer3D(canvasElement, previewCube);
-        renderer3D.start();
-    }
+    $effect(() => {
+        if (canvasElement && !renderer3D) {
+            previewCube = new Cube(1);
+            renderer3D = new Renderer3D(canvasElement, previewCube);
+            renderer3D.start();
+            renderer3D.setCameraFromEuler(cmllSettings?.cameraEulerRadians || { x: 0, y: 0, z: 0 });
+        }
+
+        if (renderer3D && cmllSettings) {
+            renderer3D.setCameraFromEuler(cmllSettings.cameraEulerRadians);
+            
+            if (typeof previewCube.rotateToState === 'function') {
+                previewCube.rotateToState(cmllSettings.topCubeColor, cmllSettings.frontCubeColor);
+            }
+        }
+    });
 
     onDestroy(() => {
         if (renderer3D) {
@@ -32,12 +45,17 @@
         if (cmllTrainerStore.isInitialized) {
             const tempGroupedCases: { [key: string]: CMLLCaseDefinition[] } = {};
             cmllTrainerStore.allCaseDefinitions.forEach(caseDef=>{
-                if (!tempGroupedCases[caseDef.group]) {
+                if (!tempGroupedCases[caseDef.group]) { 
                     tempGroupedCases[caseDef.group] = [];
                 }
                 tempGroupedCases[caseDef.group].push(caseDef);
             });
             groupedCases = tempGroupedCases;
+
+            // cmll settings
+            if (cmllTrainerStore.settings) {
+                cmllSettings = cmllTrainerStore.settings;
+            }
         }
         isLoading = false;
     }).catch(err=>{
@@ -98,9 +116,38 @@
         return { learning, total };
     }
 
+    function saveSettings() {
+        if (cmllSettings) {
+            cmllTrainerStore.updateSettings($state.snapshot(cmllSettings));
+        }
+    }
+
+    const opposites: Record<string, string> = {
+        'white': 'yellow', 'yellow': 'white',
+        'green': 'blue', 'blue': 'green',
+        'red': 'orange', 'orange': 'red'
+    };
+
+    function handleOrientationChange(changed: 'top' | 'front') {
+        if (!cmllSettings) return;
+        
+        const top = cmllSettings.topCubeColor;
+        const front = cmllSettings.frontCubeColor;
+        
+        if (top === front || opposites[top] === front) {
+            const colors = ['white', 'yellow', 'green', 'blue', 'red', 'orange'];
+            const invalid = changed === 'top' ? [top, opposites[top]] : [front, opposites[front]];
+            const valid = colors.filter(c => !invalid.includes(c));
+            
+            if (changed === 'top') cmllSettings.frontCubeColor = valid[0];
+            else cmllSettings.topCubeColor = valid[0];
+        }
+        saveSettings();
+    }
+
 </script>
 <div class="tab-navigation">
-    <button on:click={()=>navigateTo('home')}>&lt;-- Go back</button> <h1>Settings</h1>
+    <button onclick={()=>navigateTo('home')}>&lt;-- Go back</button> <h1>Settings</h1>
 </div>
 
 <div class="settings">
@@ -109,20 +156,20 @@
     {:then _} 
         {#if errorLoading}
             <p class="error">Error loading settings: {errorLoading.message}</p>
-        {:else if cmllTrainerStore.isInitialized}
+        {:else if cmllTrainerStore.isInitialized && cmllSettings}
             {@const allStats = getGroupStats(cmllTrainerStore.allCaseDefinitions)}
             <h2>CMLL Trainer Settings</h2>
             <div class="setting">
                 <span>Default view</span>
-                <input type="radio" name="2d_3d" value="2D" id="2d"> 
+                <input type="radio" name="2d_3d" value="2D" id="2d" bind:group={cmllSettings.defaultCubeState} onchange={saveSettings}> 
                 <label for="2d">2D</label>
-                <input type="radio" name="2d_3d" value="3D" id="3d">
+                <input type="radio" name="2d_3d" value="3D" id="3d" bind:group={cmllSettings.defaultCubeState} onchange={saveSettings}>
                 <label for="3d">3D</label>
             </div>
 
             <div class="setting">
                 <label for="top_color">Top color</label>
-                <select name="topColor" id="top_color">
+                <select name="topColor" id="top_color" bind:value={cmllSettings.topCubeColor} onchange={() => handleOrientationChange('top')}>
                     <option value="white">white</option>
                     <option value="yellow">yellow</option>
                     <option value="green">green</option>    
@@ -134,7 +181,7 @@
 
             <div class="setting">
                 <label for="front_color">Front color</label>
-                <select name="frontColor" id="front_color">
+                <select name="frontColor" id="front_color" bind:value={cmllSettings.frontCubeColor} onchange={() => handleOrientationChange('front')}>
                     <option value="white">white</option>
                     <option value="yellow">yellow</option>
                     <option value="green">green</option>    
@@ -146,40 +193,46 @@
 
             <div class="setting">
                 <label for="count">Amount of algorithms per session</label>
-                <input type="number" name="algorithmsPerSession" id="count" min="1" max="20">
+                <input type="number" name="algorithmsPerSession" id="count" min="1" max="20" bind:value={cmllSettings.trainerSessionCount} onchange={saveSettings}>
             </div>
 
             <div class="setting">
                 <label for="spacedRepitition">Spaced repitition mode</label>
-                <input type="checkbox" id="spacedRepitition" name="spacedRepitition" value="spaced">
+                <input type="checkbox" id="spacedRepitition" name="spacedRepitition" bind:checked={cmllSettings.spacedRepition} onchange={saveSettings}>
             </div>
 
             <div class="setting">
                 <label for="maintanence">Maintanence mode</label>
-                <input type="checkbox" id="maintanence" name="maintanence" value="maintain">
+                <input type="checkbox" id="maintanence" name="maintanence" bind:checked={cmllSettings.maintanence} onchange={saveSettings}>
             </div>
 
             <div class="setting">
                 <label for="masteredCases">Max percentage of mastered cases per session</label>
-                <input type="number" name="masteredPercentage" id="masteredCases" min="0" max="100">
+                <input type="number" name="masteredPercentage" id="masteredCases" min="0" max="100" bind:value={cmllSettings.masteredPercentage} onchange={saveSettings}>
             </div>
 
             <div class="setting">
                 <label for="auf">Random AUF move?</label>
-                <input type="checkbox" id="auf" name="AUF" value="AUF">
+                <input disabled type="checkbox" id="auf" name="AUF" bind:checked={cmllSettings.randomAUF} onchange={saveSettings}>
             </div>
 
             <div class="setting">
                 <span>Camera position:</span>
                 <br>
                 <label for="x">x</label>
-                <input type="number" name="camera-x" id="x" step="0.1" size="5">
+                <input type="number" name="camera-x" id="x" step="0.1" size="5" bind:value={cmllSettings.cameraEulerRadians.x} onchange={saveSettings}>
                 <label for="y">y</label>
-                <input type="number" name="camera-y" id="y" step="0.1" size="5">
+                <input type="number" name="camera-y" id="y" step="0.1" size="5" bind:value={cmllSettings.cameraEulerRadians.y} onchange={saveSettings}>
                 <label for="z">z</label>
-                <input type="number" name="camera-z" id="z" step="0.1" size="5">
+                <input type="number" name="camera-z" id="z" step="0.1" size="5" bind:value={cmllSettings.cameraEulerRadians.z} onchange={saveSettings}>
                 <br>
-                <canvas bind:this={canvasElement} style="height: 12rem; width: 12rem;" id="camera-euler-canvas"></canvas>
+            <canvas 
+                bind:this={canvasElement} 
+                style="height: 12rem; width: 12rem;" 
+                id="camera-euler-canvas"
+                onmouseup={() => { if (renderer3D && cmllSettings) cmllSettings.cameraEulerRadians = renderer3D.CameraEuler; saveSettings() }}
+                onmouseleave={() => { if (renderer3D && cmllSettings) cmllSettings.cameraEulerRadians = renderer3D.CameraEuler; saveSettings() }}
+            ></canvas>
             </div>
 
             <section>
@@ -188,8 +241,8 @@
                     <span>Learning { allStats.learning } out of { allStats.total }</span>
                     <br>
                 {/if}
-                <button on:click={()=>learnAllCases()}>Learn all</button>
-                <button on:click={()=>unlearnAllCases()}>Deselect all</button>
+                <button onclick={()=>learnAllCases()}>Learn all</button>
+                <button onclick={()=>unlearnAllCases()}>Deselect all</button>
             </section>
             {#each Object.entries(groupedCases) as [groupName, caseDefsInGroup] (groupName)}
                 {@const groupStats = getGroupStats(caseDefsInGroup)}
@@ -197,8 +250,8 @@
                     <h2>{ groupName } - permutations</h2>
                     <span>Learning { groupStats.learning } out of { groupStats.total }</span>
                     <br>
-                    <button on:click={()=>learnAllInGroup(caseDefsInGroup)}>Learn all</button>
-                    <button on:click={()=>unlearnAllInGroup(caseDefsInGroup)}>Deselect all</button>
+                    <button onclick={()=>learnAllInGroup(caseDefsInGroup)}>Learn all</button>
+                    <button onclick={()=>unlearnAllInGroup(caseDefsInGroup)}>Deselect all</button>
                     <div class="cases-grid">
                         {#each caseDefsInGroup as caseDef (caseDef.id)}
                             {@const trainingCase = cmllTrainerStore.getTrainingCase(caseDef.id)}
@@ -216,7 +269,7 @@
                                         </p>
                                         <label class="learn-toggle">
                                             <span>Learn?</span>
-                                            <input type="checkbox" checked={ trainingCase.wantToLearn } on:change={()=>handleWantToLearnToggle(caseDef.id)}/>
+                                            <input type="checkbox" checked={ trainingCase.wantToLearn } onchange={()=>handleWantToLearnToggle(caseDef.id)}/>
                                         </label>
                                     </div>
                                     
@@ -231,7 +284,7 @@
                                                 name={`alg-${caseDef.id}`}
                                                 value={algorithm}
                                                 checked={trainingCase.preferredAlgorithm === algorithm}
-                                                on:change={()=>handlePreferredAlgoritmChange(caseDef.id, algorithm)}
+                                                onchange={()=>handlePreferredAlgoritmChange(caseDef.id, algorithm)}
                                                 />
                                                 <span class="radio-button-body text-sm">
                                                     <span class="icon">
@@ -259,16 +312,16 @@
                 <div class="danger-container">
                     <h3 class="text-rg">Reset Trainer Settings</h3>
                     <p>This resets all trainer settings in the first section, ie. general settings. Does not reset custom algorithms or progress</p>
-                    <button class="btn text-rg">Reset General Settings</button>
+                    <button disabled class="btn text-rg">Reset General Settings</button>
                     <h3 class="text-rg">Reset CMLL settings</h3>
                     <p>This will reset cases' custom algorithms, learning toggle and selected algorithm. But not progress or general settings.</p>
-                    <button class="btn text-rg">Reset CMLL Settings</button>
+                    <button disabled class="btn text-rg">Reset CMLL Settings</button>
                     <h3 class="text-rg">Reset Progress</h3>
                     <p>This will reset progress and only progress. Not settings, selected algorithm or custom algorithms.</p>
-                    <button class="btn text-rg">Reset Progress</button>
+                    <button disabled class="btn text-rg">Reset Progress</button>
                     <h3 class="text-rg">Reset All</h3>
                     <p>Resets all settings and progress. Including custom algorithms, progress and general settings. Hard reset!</p>
-                    <button class="btn text-rg">Reset All</button>
+                    <button disabled class="btn text-rg">Reset All</button>
                 
                 </div>
             </section>
@@ -493,5 +546,13 @@
         cursor: pointer;
         margin-top: 1rem;
         margin-bottom: 1.5rem;
+    }
+
+    .danger-container button:disabled {
+        background-color: var(--neutral-800);
+        cursor: auto;
+    }
+    .danger-container button:disabled::after {
+        content: ' (disabled)';
     }
 </style>

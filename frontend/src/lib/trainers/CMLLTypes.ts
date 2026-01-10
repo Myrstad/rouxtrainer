@@ -49,7 +49,7 @@ export const DEFAULT_CMLL_SETTINGS: CMLLSettings = {
     frontCubeColor: "blue",
     randomAUF: false,
     defaultCubeState: "3D",
-    cameraEulerRadians : {x: 0.3, y: -0.3, z: 0.3}
+    cameraEulerRadians : {x: -0.2, y: -0.4, z: 0.4}
 }
 
 

@@ -51,7 +51,11 @@ class CMLLTrainerStore {
     private syncStoreWithTrainer(): void {
         if (trainerInstance) {
             trainingDataState = { ...trainerInstance.trainingData };
-            settingsState = { ...trainerInstance.settings };
+            if (settingsState) {
+                Object.assign(settingsState, trainerInstance.settings);
+            } else {
+                settingsState = { ...trainerInstance.settings };
+            }
         }
     };
 
@@ -86,13 +90,13 @@ class CMLLTrainerStore {
         this.syncStoreWithTrainer();
     }
 
-    selectNextCasesToPractice(count?: number, maxLearning?: number, maxMastered?: number): TrainingCase[] {
+    selectNextCasesToPractice(count?: number): TrainingCase[] {
         if (!isInitializedState) return [];
         // Register dependency on trainingDataState so this re-runs when data changes
         const _ = trainingDataState;
         // Register dependency on settingsState so this re-runs when settings (like session count) change
         const _s = settingsState;
-        return trainerInstance?.selectNextCasesToPractice(count ?? trainerInstance.settings.trainerSessionCount) || [];
+        return trainerInstance?.selectNextCasesToPractice(trainerInstance.settings.trainerSessionCount ?? count) || [];
     }
 
     getCaseDefinition(id: string): CMLLCaseDefinition | undefined {

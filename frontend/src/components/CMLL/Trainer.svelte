@@ -10,6 +10,8 @@
     let sessionElements = $state<any[]>([]);
     let currentCaseIndex = $state(0);
 
+    let cameraSet = $state(false);
+
     let currentCase = $derived(sessionElements[currentCaseIndex]);
 
     let reversedScrambleDisplay = $state("");
@@ -26,7 +28,7 @@
     let currentView = $state<'3D' | '2D'>('3D');
 
     function startNewSession() {
-        sessionElements = cmllTrainerStore.selectNextCasesToPractice(5,1,1);
+        sessionElements = cmllTrainerStore.selectNextCasesToPractice(5);
         currentCaseIndex = 0;
         lastOutcome = null;
         showSolution = false;
@@ -106,11 +108,16 @@
     }
 
     function updateCubeDisplayForCurrentCase() {
-        if (!currentCase) return;
+        if (!currentCase || !cmllTrainerStore.settings || !renderer3DInstance) return;
 
         trainerCube.reset();
-        trainerCube.rotateToState("y", "b");
+        trainerCube.rotateToState(cmllTrainerStore.settings.topCubeColor || "y", cmllTrainerStore.settings.frontCubeColor || "b");
         trainerCube.paintRoux();
+
+        if (!cameraSet) {
+            renderer3DInstance.setCameraFromEuler(cmllTrainerStore?.settings?.cameraEulerRadians || { x: 0, y: 0, z: 0 });
+            cameraSet = true;
+        }
 
         showSolution = false;
         lastOutcome = null;
