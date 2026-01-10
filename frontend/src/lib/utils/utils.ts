@@ -116,11 +116,11 @@ export class Quaternion {
         const s2 = Math.sin(y / 2);
         const s3 = Math.sin(z / 2);
 
-        // Again assumes order XYZ
-        this.x = s1 * c2 * c3 + c1 * s2 * s3;
-        this.y = c1 * s2 * c3 - s1 * c2 * s3;
-        this.z = c1 * c2 * s3 + s1 * s2 * c3;
-        this.w = c1 * c2 * c3 - s1 * s2 * s3;
+        // Order ZYX
+        this.x = s1 * c2 * c3 - c1 * s2 * s3;
+        this.y = c1 * s2 * c3 + s1 * c2 * s3;
+        this.z = c1 * c2 * s3 - s1 * s2 * c3;
+        this.w = c1 * c2 * c3 + s1 * s2 * s3;
 
         return this.normalize();
     }

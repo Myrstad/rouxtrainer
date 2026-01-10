@@ -93,6 +93,15 @@ export class Renderer3D {
         this.canvas.removeEventListener('mouseleave', this.handleMouseLeave);
     }
 
+    public setCameraFromEuler(euler: {x:number, y:number, z:number}) {
+        this.cameraQuaternion.setFromEuler(euler.x, euler.y, euler.z);
+    }
+
+    public get CameraEuler(): {x:number, y:number, z:number} {
+        return this.cameraQuaternion.toEuler();
+    }
+
+
     /**
      * Animation loop.
      * 
@@ -224,7 +233,7 @@ export class Renderer3D {
         this.canvas.width = this.CANVAS_WIDTH;
         this.canvas.height = this.CANVAS_HEIGHT;
 
-        this.STICKER_SCALE = Math.min( this.CANVAS_WIDTH, this.CANVAS_HEIGHT ) / 12
+        this.STICKER_SCALE = Math.min( this.CANVAS_WIDTH, this.CANVAS_HEIGHT ) / this.cube.dimention / 4
     }
 
     // --- Event Handlers ---
