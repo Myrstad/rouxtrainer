@@ -1,13 +1,32 @@
 <script lang="ts">
+    import { onDestroy } from "svelte";
     import type { CMLLCaseDefinition, TrainingCase } from "../../lib/trainers/CMLLTypes";
     import { cmllTrainerStore } from "../../lib/trainers/CMLLTrainerStore.svelte";
     import CmllCasePreview from "./CMLLCasePreview.svelte";
+    import { Cube } from "../../lib/cube/Cube";
+    import { Renderer3D } from "../../lib/cube/Renderer3D";
     
     export let navigateTo: (pageName: string) => void;
 
     let isLoading = true;
     let errorLoading: Error | null = null;
     let groupedCases: { [key: string]: CMLLCaseDefinition[] } = {};
+
+    let canvasElement: HTMLCanvasElement;
+    let renderer3D: Renderer3D;
+    let previewCube: Cube;
+
+    $: if (canvasElement && !renderer3D) {
+        previewCube = new Cube(1);
+        renderer3D = new Renderer3D(canvasElement, previewCube);
+        renderer3D.start();
+    }
+
+    onDestroy(() => {
+        if (renderer3D) {
+            renderer3D.stop();
+        }
+    });
 
     const initializationPromise = cmllTrainerStore.initialize().then(()=>{
         if (cmllTrainerStore.isInitialized) {
@@ -93,7 +112,75 @@
         {:else if cmllTrainerStore.isInitialized}
             {@const allStats = getGroupStats(cmllTrainerStore.allCaseDefinitions)}
             <h2>CMLL Trainer Settings</h2>
-            <span>Additional settings to be added!</span>
+            <div class="setting">
+                <span>Default view</span>
+                <input type="radio" name="2d_3d" value="2D" id="2d"> 
+                <label for="2d">2D</label>
+                <input type="radio" name="2d_3d" value="3D" id="3d">
+                <label for="3d">3D</label>
+            </div>
+
+            <div class="setting">
+                <label for="top_color">Top color</label>
+                <select name="topColor" id="top_color">
+                    <option value="white">white</option>
+                    <option value="yellow">yellow</option>
+                    <option value="green">green</option>    
+                    <option value="blue">blue</option>
+                    <option value="red">red</option>
+                    <option value="orange">orange</option>
+                </select> 
+            </div>
+
+            <div class="setting">
+                <label for="front_color">Front color</label>
+                <select name="frontColor" id="front_color">
+                    <option value="white">white</option>
+                    <option value="yellow">yellow</option>
+                    <option value="green">green</option>    
+                    <option value="blue">blue</option>
+                    <option value="red">red</option>
+                    <option value="orange">orange</option>
+                </select> 
+            </div>
+
+            <div class="setting">
+                <label for="count">Amount of algorithms per session</label>
+                <input type="number" name="algorithmsPerSession" id="count" min="1" max="20">
+            </div>
+
+            <div class="setting">
+                <label for="spacedRepitition">Spaced repitition mode</label>
+                <input type="checkbox" id="spacedRepitition" name="spacedRepitition" value="spaced">
+            </div>
+
+            <div class="setting">
+                <label for="maintanence">Maintanence mode</label>
+                <input type="checkbox" id="maintanence" name="maintanence" value="maintain">
+            </div>
+
+            <div class="setting">
+                <label for="masteredCases">Max percentage of mastered cases per session</label>
+                <input type="number" name="masteredPercentage" id="masteredCases" min="0" max="100">
+            </div>
+
+            <div class="setting">
+                <label for="auf">Random AUF move?</label>
+                <input type="checkbox" id="auf" name="AUF" value="AUF">
+            </div>
+
+            <div class="setting">
+                <span>Camera position:</span>
+                <br>
+                <label for="x">x</label>
+                <input type="number" name="camera-x" id="x" step="0.1" size="5">
+                <label for="y">y</label>
+                <input type="number" name="camera-y" id="y" step="0.1" size="5">
+                <label for="z">z</label>
+                <input type="number" name="camera-z" id="z" step="0.1" size="5">
+                <br>
+                <canvas bind:this={canvasElement} style="height: 12rem; width: 12rem;" id="camera-euler-canvas"></canvas>
+            </div>
 
             <section>
                 <h2>ALL CASES</h2>
@@ -166,6 +253,25 @@
                     </div>
                 </section>
             {/each}
+
+            <section>
+                <h2>Danger Zone — Red</h2>
+                <div class="danger-container">
+                    <h3 class="text-rg">Reset Trainer Settings</h3>
+                    <p>This resets all trainer settings in the first section, ie. general settings. Does not reset custom algorithms or progress</p>
+                    <button class="btn text-rg">Reset General Settings</button>
+                    <h3 class="text-rg">Reset CMLL settings</h3>
+                    <p>This will reset cases' custom algorithms, learning toggle and selected algorithm. But not progress or general settings.</p>
+                    <button class="btn text-rg">Reset CMLL Settings</button>
+                    <h3 class="text-rg">Reset Progress</h3>
+                    <p>This will reset progress and only progress. Not settings, selected algorithm or custom algorithms.</p>
+                    <button class="btn text-rg">Reset Progress</button>
+                    <h3 class="text-rg">Reset All</h3>
+                    <p>Resets all settings and progress. Including custom algorithms, progress and general settings. Hard reset!</p>
+                    <button class="btn text-rg">Reset All</button>
+                
+                </div>
+            </section>
         {:else}
             <p>Initializing settings...</p>
         {/if}
@@ -340,5 +446,52 @@
         padding: 10px;
         border-radius: 1rem;
         background-color: var(--neutral-200);
+    }
+
+    #camera-euler-canvas {
+        background-color: var(--neutral-100);
+        border-radius: 0.5rem;
+    }
+
+    .danger-container::before {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 0;
+        left: -2rem;
+        right: -2rem;
+        bottom: 0;
+        background-color: var(--red-200);
+        z-index: -1;
+        border-radius: 1rem;
+    }
+
+    .danger-container {
+        margin-top: 1.5rem;
+        position: relative;
+        padding: 2rem 0;
+        overflow-x: none;
+    }
+
+    .danger-container h3 {
+        font-weight: bold;
+        margin: 0;
+    }
+
+    .danger-container p {
+        margin: 0;
+        color: var(--neutral-900);
+    }
+
+    .danger-container button {
+        background-color: var(--red-800);
+        color: var(--red-200);
+        padding: 0.5rem 1rem;
+        border: none;
+        letter-spacing: 2%;
+        border-radius: .25rem;
+        cursor: pointer;
+        margin-top: 1rem;
+        margin-bottom: 1.5rem;
     }
 </style>
