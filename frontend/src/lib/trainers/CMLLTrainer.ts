@@ -1,11 +1,12 @@
-import type { CMLLCaseDefinition, TrainingCase, TrainingData, LearningStatus } from './CMLLTypes'
+import type { CMLLCaseDefinition, TrainingCase, TrainingData, LearningStatus, CMLLSettings } from './CMLLTypes'
 import CMLLCases from "./CMLL-cases.json"
-import { CMLL_CASES_JSON_PATH } from "./CMLLTypes";
+import { CMLL_CASES_JSON_PATH, DEFAULT_CMLL_SETTINGS } from "./CMLLTypes";
 import { db } from '../db';
 
 class CMLLTrainer {
 
     private allCaseDefinitions: CMLLCaseDefinition[] = [];
+    public settings!: CMLLSettings;
     public trainingData: TrainingData = {};
     private isInitialized = false;
 
@@ -25,6 +26,7 @@ class CMLLTrainer {
             // }
             // this.allCaseDefinitions = await response.json();
             this.allCaseDefinitions = CMLLCases;
+            await this._loadSettingsFromDb(); // Load settings first
             await this._loadTrainingFromDb();
             await this._ensureTrainingDataForAllCases();
             this.isInitialized = true;
@@ -34,6 +36,24 @@ class CMLLTrainer {
             throw error; // Re-throw to allow UI to handle it
         }
             
+    }
+
+    private async _loadSettingsFromDb(): Promise<void> {
+        try {
+            // We expect only one settings object, typically with ID 1
+            let storedSettings = await db.cmllSettings.get(1);
+            if (!storedSettings) {
+                // If no settings found, create default settings and store them
+                this.settings = { ...DEFAULT_CMLL_SETTINGS, id: 1 }; // Assign ID 1 for the single settings object
+                await db.cmllSettings.add(this.settings);
+                console.log("Initialized default CMLL settings in DB.");
+            } else {
+                this.settings = storedSettings;
+            }
+        } catch (error) {
+            console.error("Error initializing CMLLTrainer:", error);
+            throw error; // Re-throw to allow UI to handle it
+        }
     }
     
     private async _ensureTrainingDataForAllCases(): Promise<void> {
@@ -211,10 +231,9 @@ class CMLLTrainer {
 
     public selectNextCasesToPractice(
         count: number = 5,
-        spacedRepition: boolean = true,
-        maintanence: boolean = true,
-        masteredPercentage: number = 0.2
     ) : TrainingCase[] {
+        const { spacedRepition, maintanence, masteredPercentage } = this.settings;
+
         if (!this.isInitialized) {
             console.warn("Trainer not initialized. Call initialize() first. Returning empty array.");
             return [];
@@ -312,6 +331,19 @@ class CMLLTrainer {
             [array[i], array[j]] = [array[j], array[i]];
         }
         return array;
+    }
+
+    /**
+     * Updates the CMLL settings and persists them to the database.
+     * @param newSettings A partial object containing the settings to update.
+     */
+    public async updateSettings(newSettings: Partial<CMLLSettings>): Promise<void> {
+        if (!this.settings) {
+            console.error("CMLL settings not initialized. Call initialize() first.");
+            return;
+        }
+        Object.assign(this.settings, newSettings);
+        await db.cmllSettings.put(this.settings); // Use put to update by ID
     }
 }
 

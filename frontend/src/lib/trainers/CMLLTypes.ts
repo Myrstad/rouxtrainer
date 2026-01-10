@@ -27,4 +27,31 @@ export interface TrainingCase {
 
 export type TrainingData = Record<string, TrainingCase>; // Maps case ID to TrainingCase
 
+export interface CMLLSettings {
+    id?: number;
+    spacedRepition: boolean;        // 
+    maintanence: boolean;           // if mastered should show
+    masteredPercentage: number;     // maximum amount of mastered (percentage)
+    trainerSessionCount: number;    // amount of cases per sessio
+    topCubeColor: string;           // white, yellow, red, orange, green, blue
+    frontCubeColor: string;         // white, yellow, red, orange, green, blue; except oposite color pair
+    randomAUF: boolean;             // random U, U', U2 or none to help with regocnition
+    defaultCubeState: "2D"|"3D";
+    cameraEulerRadians : {x:number, y:number, z:number};
+}
+
+export const DEFAULT_CMLL_SETTINGS: CMLLSettings = {
+    spacedRepition: true,
+    maintanence: true,
+    masteredPercentage: 0.2,
+    trainerSessionCount: 5,
+    topCubeColor: "yellow",
+    frontCubeColor: "blue",
+    randomAUF: false,
+    defaultCubeState: "3D",
+    cameraEulerRadians : {x: 0.3, y: -0.3, z: 0.3}
+}
+
+
+
 export const CMLL_CASES_JSON_PATH = "/CMLL-cases.json"; // Path to your JSON file in the public/static folder

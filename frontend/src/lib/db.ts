@@ -1,13 +1,16 @@
 import Dexie, { type Table } from 'dexie';
-import type { TrainingCase } from './trainers/CMLLTypes';
+import type { TrainingCase, CMLLSettings } from './trainers/CMLLTypes';
 
 export class RouxtrainerDatabase extends Dexie {
     cmll!: Table<TrainingCase>;
+    cmllSettings!: Table<CMLLSettings>;
+
 
     constructor() {
         super("RouxtrainerDb");
         this.version(1).stores({
-            cmll: 'id'
+            cmll: 'id',
+            cmllSettings: '++id',
         })
     }
 }

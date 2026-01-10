@@ -1,5 +1,5 @@
 import CMLLTrainer from "./CMLLTrainer";
-import type { TrainingCase, TrainingData, CMLLCaseDefinition, LearningStatus } from "./CMLLTypes";
+import type { TrainingCase, TrainingData, CMLLCaseDefinition, LearningStatus, CMLLSettings } from "./CMLLTypes";
 
 let trainerInstance: CMLLTrainer | null = $state(null);
 let isInitializedState = $state(false);
@@ -78,7 +78,7 @@ class CMLLTrainerStore {
         if (!isInitializedState) return [];
         // Register dependency on trainingDataState so this re-runs when data changes
         const _ = trainingDataState;
-        return trainerInstance?.selectNextCasesToPractice(count, true, true, 0.2) || [];
+        return trainerInstance?.selectNextCasesToPractice(trainerInstance.settings.trainerSessionCount) || [];
     }
 
     getCaseDefinition(id: string): CMLLCaseDefinition | undefined {
