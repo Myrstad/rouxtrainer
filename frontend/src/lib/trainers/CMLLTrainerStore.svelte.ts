@@ -5,6 +5,7 @@ let trainerInstance: CMLLTrainer | null = $state(null);
 let isInitializedState = $state(false);
 let trainingDataState: TrainingData = $state({});
 let allCaseDefinitionsState: CMLLCaseDefinition[] = $state([]);
+let settingsState: CMLLSettings | undefined = $state(undefined);
 
 
 class CMLLTrainerStore {
@@ -23,6 +24,7 @@ class CMLLTrainerStore {
             isInitializedState = true;
             trainingDataState = { ... trainerInstance.trainingData };
             allCaseDefinitionsState = [... trainerInstance.getAllCaseDefinitions()];
+            settingsState = { ...trainerInstance.settings };
         } catch (error) {
             console.error("Failed to initialize CMLL Trainer Store:", error);
             // Handle error appropriately in UI if needed
@@ -41,10 +43,15 @@ class CMLLTrainerStore {
         return allCaseDefinitionsState;
     }
 
+    get settings() {
+        return settingsState;
+    }
+
     // Helper to update store after trainer methods modify data
     private syncStoreWithTrainer(): void {
         if (trainerInstance) {
             trainingDataState = { ...trainerInstance.trainingData };
+            settingsState = { ...trainerInstance.settings };
         }
     };
 
@@ -74,11 +81,18 @@ class CMLLTrainerStore {
         this.syncStoreWithTrainer();
     }
 
+    async updateSettings(newSettings: Partial<CMLLSettings>) {
+        await trainerInstance?.updateSettings(newSettings);
+        this.syncStoreWithTrainer();
+    }
+
     selectNextCasesToPractice(count?: number, maxLearning?: number, maxMastered?: number): TrainingCase[] {
         if (!isInitializedState) return [];
         // Register dependency on trainingDataState so this re-runs when data changes
         const _ = trainingDataState;
-        return trainerInstance?.selectNextCasesToPractice(trainerInstance.settings.trainerSessionCount) || [];
+        // Register dependency on settingsState so this re-runs when settings (like session count) change
+        const _s = settingsState;
+        return trainerInstance?.selectNextCasesToPractice(count ?? trainerInstance.settings.trainerSessionCount) || [];
     }
 
     getCaseDefinition(id: string): CMLLCaseDefinition | undefined {
