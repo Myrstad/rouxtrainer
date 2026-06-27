@@ -29,20 +29,20 @@ export type TrainingData = Record<string, TrainingCase>; // Maps case ID to Trai
 
 export interface CMLLSettings {
     id?: number;
-    spacedRepition: boolean;        // 
-    maintanence: boolean;           // if mastered should show
+    spacedRepetition: boolean;        //
+    maintenance: boolean;           // if mastered should show
     masteredPercentage: number;     // maximum amount of mastered (percentage)
-    trainerSessionCount: number;    // amount of cases per sessio
+    trainerSessionCount: number;    // amount of cases per session
     topCubeColor: string;           // white, yellow, red, orange, green, blue
-    frontCubeColor: string;         // white, yellow, red, orange, green, blue; except oposite color pair
-    randomAUF: boolean;             // random U, U', U2 or none to help with regocnition
+    frontCubeColor: string;         // white, yellow, red, orange, green, blue; except opposite color pair
+    randomAUF: boolean;             // random U, U', U2 or none to help with recognition
     defaultCubeState: "2D"|"3D";
     cameraEulerRadians : {x:number, y:number, z:number};
 }
 
 export const DEFAULT_CMLL_SETTINGS: CMLLSettings = {
-    spacedRepition: true,
-    maintanence: true,
+    spacedRepetition: true,
+    maintenance: true,
     masteredPercentage: 0.2,
     trainerSessionCount: 5,
     topCubeColor: "yellow",

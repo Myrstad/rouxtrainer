@@ -204,7 +204,7 @@ class CMLLTrainer {
                 // if learning
                 if (trainingCase.learningStatus == "unseen" || trainingCase.learningStatus == "unknown" || trainingCase.streakSuccess! <= 1) {
                     trainingCase.masteryLevel = 1;
-                    trainingCase.learningStatus == "unknown"
+                    trainingCase.learningStatus = "unknown"
                 }
                 if (trainingCase.learningStatus == "mastered") {
                     trainingCase.masteryLevel = 2;
@@ -232,7 +232,7 @@ class CMLLTrainer {
     public selectNextCasesToPractice(
         count: number = 5,
     ) : TrainingCase[] {
-        const { spacedRepition, maintanence, masteredPercentage } = this.settings;
+        const { spacedRepetition, maintenance, masteredPercentage } = this.settings;
 
         if (!this.isInitialized) {
             console.warn("Trainer not initialized. Call initialize() first. Returning empty array.");
@@ -248,7 +248,7 @@ class CMLLTrainer {
          > Future mastered
         
         So those due (spaced repetition only) are prioritized
-        With a percentage of mastered cards (if maintanence) based on percentage [1+ mastered]
+        With a percentage of mastered cards (if maintenance) based on percentage [1+ mastered]
         Then Future learning to not create a large learning backlog
         Then learn new cases (unseen)
         Then Future mastered for emergency filling up to count
@@ -261,8 +261,8 @@ class CMLLTrainer {
         
         if (allCases.length === 0) return [];
         
-        const isDue = allCases.filter(c => (c.nextReview && c.nextReview <= now) || !spacedRepition || !c.nextReview);
-        // console.log(`Selecting ${count} cases, with spaced repition ${spacedRepition ? 'enabled' : 'disabled'}, with maintenence ${maintanence ? 'enabled' : 'disabled'}`);
+        const isDue = allCases.filter(c => (c.nextReview && c.nextReview <= now) || !spacedRepetition || !c.nextReview);
+        // console.log(`Selecting ${count} cases, with spaced repetition ${spacedRepetition ? 'enabled' : 'disabled'}, with maintenance ${maintenance ? 'enabled' : 'disabled'}`);
         
         // console.log("Is due:", isDue);
         
@@ -274,12 +274,12 @@ class CMLLTrainer {
 
         isDue.sort((a,b) => (a.nextReview! - b.nextReview!));
 
-        // 1. Add mastered for maintance
-        if (maintanence) {
+        // 1. Add mastered for maintenance
+        if (maintenance) {
             const maxMastered = Math.max(1, Math.floor(count * masteredPercentage));
-            // should be based on spaced repitition or random if not
+            // should be based on spaced repetition or random if not
             const toAdd = this.shuffleArray(dueMastered).sort((a,b) => (a.nextReview! - b.nextReview!));
-            // console.log("Maintenence added:", toAdd);
+            // console.log("Maintenance added:", toAdd);
             
             result.push(...toAdd.slice(0, maxMastered));
         }
@@ -290,14 +290,14 @@ class CMLLTrainer {
         result.push(...dueLearning.slice(0, learningSlotsNeeded));
 
         //3. Fill with future learning/unknown
-        if (result.length < count && spacedRepition) {
-            // cannot happen without spaced repition, since then everything is already in dueLearning
-            const remainding = count - result.length;
+        if (result.length < count && spacedRepetition) {
+            // cannot happen without spaced repetition, since then everything is already in dueLearning
+            const remaining = count - result.length;
             const alreadySelectedIds = new Set(result.map(r => r.id))
             const filler = allCases
                 .filter(c => !alreadySelectedIds.has(c.id) && (c.learningStatus == "learning" || c.learningStatus == "unknown"));
 
-            result.push(...this.shuffleArray(filler).slice(0, remainding));
+            result.push(...this.shuffleArray(filler).slice(0, remaining));
         }
 
 
