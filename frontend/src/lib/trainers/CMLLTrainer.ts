@@ -301,7 +301,7 @@ class CMLLTrainer {
         }
 
 
-        //4. Fill remainding with unseen
+        //4. Fill remaining with unseen
         if (result.length < count) {
             const unseenSlotsNeeded = count - result.length;
             const randomUnseen = this.shuffleArray(unseen).slice(0, unseenSlotsNeeded);
@@ -311,12 +311,12 @@ class CMLLTrainer {
 
         //5. Emergency fill, mastered not yet due
         if (result.length < count) {
-            let remainding = count - result.length
+            let remaining = count - result.length
             const alreadySelectedIds = new Set(result.map(r=>r.id))
             const filler = allCases
                 .filter(c => !alreadySelectedIds.has(c.id))
 
-            const toAdd = this.shuffleArray(filler).sort((a,b) => (a.nextReview || 0) - (b.nextReview || 0)).slice(0, remainding)
+            const toAdd = this.shuffleArray(filler).sort((a,b) => (a.nextReview || 0) - (b.nextReview || 0)).slice(0, remaining)
             console.log("emergency added", toAdd);
             
             result.push(...toAdd)
