@@ -219,7 +219,7 @@ const dropdowns = {
         const dropdownTriggers: NodeListOf<HTMLElement> = document.querySelectorAll(".has-dropdown > a");
 
         let activeDropdownMenu: HTMLElement | null = null;
-        let hideDropdownTimeoutId: NodeJS.Timeout|null = null;
+        let hideDropdownTimeoutId: NodeJS.Timeout|number|null = null;
 
         function showDropdown(trigger: HTMLElement, menu: HTMLElement) {
             clearTimeout(hideDropdownTimeoutId ?? 0);
@@ -247,6 +247,16 @@ const dropdowns = {
                     activeDropdownMenu = null
                 }
             }, 2000);
+        }
+
+        function hideDropdown(trigger: HTMLElement, menu: HTMLElement) {
+            clearTimeout(hideDropdownTimeoutId ?? 0);
+
+            if (activeDropdownMenu === menu) {
+                menu.classList.remove("is-open")
+                trigger.setAttribute('aria-expanded', 'false');
+                activeDropdownMenu = null
+            }
         }
 
         dropdownTriggers.forEach(trigger => {
@@ -278,7 +288,7 @@ const dropdowns = {
                 initiateHideDropdown(trigger, dropdownMenu);
             });
             dropdownMenu.addEventListener('mouseleave', () => {
-                initiateHideDropdown(trigger, dropdownMenu);
+                hideDropdown(trigger, dropdownMenu);
             });
 
             trigger.addEventListener('focus', () => {
@@ -291,7 +301,7 @@ const dropdowns = {
                     // Check if the new focused element (event.relatedTarget) is outside the dropdown area
                     const isFocusStillInsideDropdownArea = dropdownArea.contains(event.relatedTarget as Node);
                     if (!isFocusStillInsideDropdownArea) {
-                        initiateHideDropdown(trigger, dropdownMenu);
+                        hideDropdown(trigger, dropdownMenu);
                     }
                 });
             }
