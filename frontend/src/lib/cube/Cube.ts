@@ -16,16 +16,16 @@ import { Sticker } from "./Sticker";
  */
 export class Cube {
     stickers: Sticker[] = [];
-    dimention: number = 0;
+    dimension: number = 0;
     stickerWidth: number = 2;
     stickerHalfWidth: number = 1;
 
     public constructor(dimention: number = 3) {
-        this.dimention = dimention;
+        this.dimension = dimention;
 
-        const offset = (dimention) // eg. center peice should be [0,3,0] with vertexes [±1,3,±1]
+        const offset = (dimention) // eg. center piece should be [0,3,0] with vertexes [±1,3,±1]
 
-        // (non standard) Right hand coordinates:
+        // (non-standard) Right hand coordinates:
         // index (x) back/front
         // long  (y) left/right
         // long  (z) up/down
@@ -40,7 +40,7 @@ export class Cube {
     public reset() : void {
         this.stickers = [];
 
-        const offset = (this.dimention) // eg. center peice should be [0,3,0] with vertexes [±1,3,±1]
+        const offset = (this.dimension) // eg. center peice should be [0,3,0] with vertexes [±1,3,±1]
 
         this.stickers.push(...this.createFace([ offset, 0, 0], "blue"));
         this.stickers.push(...this.createFace([-offset, 0, 0], "green"));
@@ -56,8 +56,8 @@ export class Cube {
         const [fx, fy, fz] = facePosition;
         let faceNormal: number[] = [];
 
-        const start = -this.dimention + 1;
-        const end = this.dimention
+        const start = -this.dimension + 1;
+        const end = this.dimension
         const step = 2;
         if (fx != 0) {
             faceNormal = [fx/Math.abs(fx),0,0];
@@ -123,42 +123,42 @@ export class Cube {
             
             // FRONT/BACK — X axis
             case "B": // normal
-                affectedStickers.push(...this.stickers.filter(sticker => sticker.position[0] >= this.dimention - 1))
+                affectedStickers.push(...this.stickers.filter(sticker => sticker.position[0] >= this.dimension - 1))
                 break;
             case "b": // wide
-                affectedStickers.push(...this.stickers.filter(sticker => sticker.position[0] >= this.dimention - 1 - 2))
+                affectedStickers.push(...this.stickers.filter(sticker => sticker.position[0] >= this.dimension - 1 - 2))
                 break;
             case "F": // normal
-                affectedStickers.push(...this.stickers.filter(sticker => sticker.position[0] <= -(this.dimention - 1)))
+                affectedStickers.push(...this.stickers.filter(sticker => sticker.position[0] <= -(this.dimension - 1)))
                 break;
             case "f": // wide
-                affectedStickers.push(...this.stickers.filter(sticker => sticker.position[0] <= -(this.dimention - 1 - 2)))
+                affectedStickers.push(...this.stickers.filter(sticker => sticker.position[0] <= -(this.dimension - 1 - 2)))
                 break;
             // LEFT/RIGHT — Y axis
             case "L": // normal
-                affectedStickers.push(...this.stickers.filter(sticker => sticker.position[1] >= this.dimention - 1))
+                affectedStickers.push(...this.stickers.filter(sticker => sticker.position[1] >= this.dimension - 1))
                 break;
             case "l": // wide
-                affectedStickers.push(...this.stickers.filter(sticker => sticker.position[1] >= this.dimention - 1 - 2))
+                affectedStickers.push(...this.stickers.filter(sticker => sticker.position[1] >= this.dimension - 1 - 2))
                 break;
             case "R": // normal
-                affectedStickers.push(...this.stickers.filter(sticker => sticker.position[1] <= -(this.dimention - 1)))
+                affectedStickers.push(...this.stickers.filter(sticker => sticker.position[1] <= -(this.dimension - 1)))
                 break;
             case "r": // wide
-                affectedStickers.push(...this.stickers.filter(sticker => sticker.position[1] <= -(this.dimention - 1 - 2)))
+                affectedStickers.push(...this.stickers.filter(sticker => sticker.position[1] <= -(this.dimension - 1 - 2)))
                 break;
             // UP/DOWN — Z axis
             case "U": // normal
-                affectedStickers.push(...this.stickers.filter(sticker => sticker.position[2] >= this.dimention - 1))
+                affectedStickers.push(...this.stickers.filter(sticker => sticker.position[2] >= this.dimension - 1))
                 break;
             case "u": // wide
-                affectedStickers.push(...this.stickers.filter(sticker => sticker.position[2] >= this.dimention - 1 - 2))
+                affectedStickers.push(...this.stickers.filter(sticker => sticker.position[2] >= this.dimension - 1 - 2))
                 break;
             case "D": // normal
-                affectedStickers.push(...this.stickers.filter(sticker => sticker.position[2] <= -(this.dimention - 1)))
+                affectedStickers.push(...this.stickers.filter(sticker => sticker.position[2] <= -(this.dimension - 1)))
                 break;
             case "d": // wide
-                affectedStickers.push(...this.stickers.filter(sticker => sticker.position[2] <= -(this.dimention - 1 - 2)))
+                affectedStickers.push(...this.stickers.filter(sticker => sticker.position[2] <= -(this.dimension - 1 - 2)))
                 break;
             
         
@@ -260,19 +260,19 @@ export class Cube {
         const topColor = top[0].toLowerCase();
         const frontColor = front[0].toLowerCase();
         
-        let currentTopColor = this.getStickerFromPosition([0,0,this.dimention])?.color[0];
-        let currentFrontColor = this.getStickerFromPosition([-this.dimention,0,0])?.color[0];
+        let currentTopColor = this.getStickerFromPosition([0,0,this.dimension])?.color[0];
+        let currentFrontColor = this.getStickerFromPosition([-this.dimension,0,0])?.color[0];
         
         while (currentTopColor != topColor) {
             // Try X 4 times
             for (let i = 0; i < 4; i++) {
                 this.turn("x");
-                currentTopColor = this.getStickerFromPosition([0,0,this.dimention])?.color[0];
+                currentTopColor = this.getStickerFromPosition([0,0,this.dimension])?.color[0];
                 if (currentTopColor == topColor) break;
             }
             if (currentTopColor == topColor) break;
 
-            const currentLeftColor = this.getStickerFromPosition([0,this.dimention,0])?.color[0];
+            const currentLeftColor = this.getStickerFromPosition([0,this.dimension,0])?.color[0];
             if (currentLeftColor == topColor) {
                 this.turn("z")
             } else {
@@ -287,7 +287,7 @@ export class Cube {
                 break
             }
             this.turn("y");
-            currentFrontColor = this.getStickerFromPosition([-this.dimention,0,0])?.color[0];
+            currentFrontColor = this.getStickerFromPosition([-this.dimension,0,0])?.color[0];
         }
     }
 

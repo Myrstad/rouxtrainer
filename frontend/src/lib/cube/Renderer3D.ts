@@ -233,7 +233,7 @@ export class Renderer3D {
         this.canvas.width = this.CANVAS_WIDTH;
         this.canvas.height = this.CANVAS_HEIGHT;
 
-        this.STICKER_SCALE = Math.min( this.CANVAS_WIDTH, this.CANVAS_HEIGHT ) / this.cube.dimention / 4
+        this.STICKER_SCALE = Math.min( this.CANVAS_WIDTH, this.CANVAS_HEIGHT ) / this.cube.dimension / 4
     }
 
     // --- Event Handlers ---
