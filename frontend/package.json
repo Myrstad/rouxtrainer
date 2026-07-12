@@ -6,7 +6,8 @@
     "dev": "astro dev --port 80 --host",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "test": "vitest"
   },
   "dependencies": {
     "@astrojs/svelte": "^8.0.1",
@@ -16,5 +17,8 @@
     "dexie": "^4.2.1",
     "svelte": "^5.33.14",
     "typescript": "^5.8.3"
+  },
+  "devDependencies": {
+    "vitest": "^4.1.10"
   }
 }
