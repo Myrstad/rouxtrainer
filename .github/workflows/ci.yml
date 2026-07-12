@@ -1,0 +1,21 @@
+name: ci.yml
+on:
+  ["push", "pull_request"]
+
+jobs:
+  test-frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Npm install
+        uses: actions/setup-node@v4
+      - run: npm install
+
+      - name: Vitest
+        uses: actions/setup-node@v4
+      - run: npm run test
