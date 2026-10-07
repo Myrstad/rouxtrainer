@@ -1,4 +1,4 @@
-FROM node:20-alpine AS build
+FROM node:24-alpine AS build
 
 WORKDIR /app/backend
 
@@ -7,7 +7,7 @@ COPY . .
 
 RUN npm install
 
-FROM node:20-alpine AS production
+FROM node:24-alpine AS production
 
 COPY --from=build /app/backend/ /app/backend/
 
@@ -15,7 +15,7 @@ WORKDIR /app/backend
 
 CMD [ "npm", "run", "start" ]
 
-FROM node:20-alpine AS dev
+FROM node:24-alpine AS dev
 
 WORKDIR /backend
 
