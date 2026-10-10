@@ -14,6 +14,7 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "argon2": "^0.45.1",
     "dotenv": "^16.6.1",
     "drizzle-orm": "^1.0.0-rc.4",
     "express": "^5.1.0",
@@ -29,5 +30,11 @@
     "ts-node": "^10.9.2",
     "tsx": "^4.23.15",
     "typescript": "^5.8.3"
+  },
+  "allowScripts": {
+    "argon2@0.45.1": true,
+    "esbuild@0.25.12": true,
+    "esbuild@0.28.2": true,
+    "nodemon@1.19.4": true
   }
 }
