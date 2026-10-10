@@ -1,7 +1,5 @@
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { migrate } from 'drizzle-orm/node-postgres/migrator';
-import {User, users} from "./schema";
-import {eq} from "drizzle-orm";
 
 const host = process.env.POSTGRES_HOST || '0.0.0.0';
 const port = process.env.DATABASE_PORT || 5432;
@@ -20,22 +18,4 @@ export async function runMigrations() {
     await migrate(db, { migrationsFolder: './drizzle' });
 
     console.log('Migrations completed successfully');
-}
-
-export async function testDb() {
-    const user: User[] = await db.insert(users)
-        .values({age: 12, name: 'test', email: "ok", phone: ""})
-        .returning();
-    console.log(user)
-
-    let result = await db.select().from(users)
-    console.log(result)
-
-    await db.update(users).set({name: 'morten'}).where(eq(users.name, 'test'))
-
-    const deletedUser = await db.delete(users)
-        .where(eq(users.name, 'morten'))
-        .returning();
-
-    console.log(deletedUser)
 }
