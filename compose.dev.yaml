@@ -8,8 +8,6 @@ services:
     volumes:
       - ./backend:/backend
       - /backend/node_modules
-    ports:
-      - "${BACKEND_PORT}:3000"
   frontend:
     build:
       target: dev

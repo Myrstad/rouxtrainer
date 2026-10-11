@@ -48,9 +48,10 @@ For steps 3 and 4 you may need to install dependencies with `npm install` the fi
 **Prerequisites:**
  * Docker and Docker Compose
  * Reverse proxy for port `8080`. E.g. `nginx` or `caddy`
+ * Reverse proxy `:443/api/*` --> `:3001/api/*`. E.g. `nginx` or `caddy`
 
 **Setup steps:**
 1. Run and spin up docker compose. 
 ```
 docker compose up --build -d
-``` 
+```
