@@ -2,6 +2,49 @@
 import Layout from "../layouts/Layout.astro";
 ---
 
-<Layout>
-    To be added (TBA).
+<Layout title="Login">
+    <form>
+        <label for="username">Username:</label><br>
+        <input type="text" name="username" id="username" required></input><br>
+        <label for="password">Password:</label><br>
+        <input type="password" name="password" id="password" required></input><br>
+        <label for="stay">Stay logged in</label>
+        <input type="checkbox" name="stay" id="stay"></input><br>
+        <button type="submit">Login</button>
+    </form>
 </Layout>
+
+<script>
+
+    const formEl = document.querySelector("form")
+
+    formEl?.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const username = (e.target as any)[0].value;
+        const password = (e.target as any)[1].value;
+        const refresh = (e.target as any)[2].checked;
+
+        fetch("/api/auth/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                username: username,
+                password: password,
+                canRefresh: refresh ?? null,
+            })
+        }).then(async (res) => {
+            const text = await res.json();
+            if (res.status !== 200) {
+                alert(text["error"]);
+            } else {
+                console.log(text)
+                window.location.href = '/profile/';
+            }
+        }).catch((e) => {
+            console.log(e)
+        })
+    })
+</script>
