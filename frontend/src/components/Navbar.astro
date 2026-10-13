@@ -1,6 +1,7 @@
 ---
 import { Icon } from "astro-icon/components"
 import Chip from "./Chip.astro"
+import NavbarProfile from "./profile/NavbarProfile.svelte"
 
 const dropdowns = {
     "guides": [
@@ -49,10 +50,7 @@ const dropdowns = {
             </li>
         </ul>
     </div>
-    <div class="user">
-        <a class="secondary" href="/login">Login</a>
-        <a class="primary" href="/register">Register</a>
-    </div>
+    <NavbarProfile client:load></NavbarProfile>
 </nav>
 
 <style>
