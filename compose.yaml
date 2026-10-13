@@ -29,6 +29,7 @@ services:
             - POSTGRES_PASSWORD
             - POSTGRES_HOST=database
             - POSTGRES_PORT=5432
+            - NODE_ENV=production
         ports:
             - "${BACKEND_PORT}:3000"
 
